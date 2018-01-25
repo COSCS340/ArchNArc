@@ -1,0 +1,10 @@
+Archery & Arcana Big Picture
+
+The game will be split into two programs: a server program that will handle input from the client(s), and a client program that will allow the player to send input to and view output from the server.
+The client program will operate as a pair of threads, one handling the buffering and transmission of data to and from the server, and the other directly receiving input from the player and displaying messages from the server to them.
+The server program will operate as a trio of threads, one handling the buffering and transmission of data to and from the client, one processing the turns for each character and prompting relevant players when their turns arrive, and one responding to input from players, even whose turn it currently is not, so that they can access visible data while waiting for their turn.
+The non-transmission thread of the client program will execute a parser to interpret inputs, and will send the interpreted data to the server to be applied by handing it off to the transmission thread, while also displaying text and data the transmission thread receives from the server, which will be placed in an accessible buffer for the thread to read.
+The non-transmission thread of the server program that handles the turn actions will execute commands received from the client via the transmission thread if the active character is controlled by a player, or generate a command if the active character is computer-controlled, plodding ever onwards as needed. How turns progress will change in certain situations, but that will be clarified later.
+The other non-transimission thread of the server program will respond to valid requests for information from clients, allowing them to check such data as their inventories, status, and surroundings. Note that all character data is stored by the server program, not the client.
+
+Jonathan will work on the two threads relating to the transmission code, as it needs to be set up from both ends to make sure everything works properly.
