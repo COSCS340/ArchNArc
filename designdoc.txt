@@ -8,3 +8,16 @@ The non-transmission thread of the server program that handles the turn actions 
 The other non-transimission thread of the server program will respond to valid requests for information from clients, allowing them to check such data as their inventories, status, and surroundings. Note that all character data is stored by the server program, not the client.
 
 Jonathan will work on the two threads relating to the transmission code, as it needs to be set up from both ends to make sure everything works properly.
+
+Commands to be supported by the parser:
+drink [drinkable item]
+eat [edible item] 
+use [item]
+use [item] on [target]
+use [action]
+use [action] on [target]
+cast [spell]
+cast [spell] on [target]
+check [inventory|status|time|map|skills|spells]
+check [target]
+try [command]
