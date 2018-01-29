@@ -35,7 +35,7 @@ int action () {
 	else if (useSynonyms(b))
 		actionUse(command, pos+1);
 	else
-		return 0;//badInput();
+		badInput();
 	return 1;
 }
 
@@ -55,6 +55,11 @@ void actionHelp() {
 	cout << "Try using an item, skill or spell." << endl
 		 << "You can check on the status of enemies and allies or list skills and spells." << endl;
 		 << "If you want to know what something will do, try an action." << endl;
+}
+
+void badInput() {
+	using namespace std;
+	cout << "Invalid input. Try again." << endl;
 }
 
 bool useSynonyms(std::string command) {
