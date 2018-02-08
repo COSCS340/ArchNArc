@@ -1,8 +1,11 @@
 /*
  *
  */
-
+#include <iostream>
 #include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <sys/types.h>
 
 using namespace std;
 

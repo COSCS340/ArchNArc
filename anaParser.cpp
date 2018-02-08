@@ -24,6 +24,11 @@ int action () {
 	string command;
 	getline(cin, command);
 	string b;
+
+	//Hey, Michaela here. This would be easier with strstr(), if you
+	//wanted to simplify searching strings. It'd just need to be with
+	//c_strings instead.
+
 	size_t pos = command.find(" ");
 	b = command.substr(0, pos);
 	if (b == "try" || b == "Try")
