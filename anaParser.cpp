@@ -2,11 +2,14 @@
 #include <cstdio>
 #include <string>
 #include <cstring>
+#include <cctype>
+#include "fields.h"
+
 int action();
-bool useSynonyms(std::string);
-void actionUse(std::string, size_t);
-void actionCheck(std::string, size_t);
-void actionTry(std::string, size_t);
+void synonyms(char*);
+void actionUse(IS);
+void actionCheck(IS);
+void actionTry(IS);
 void actionHelp();
 void badInput();
 
@@ -21,6 +24,7 @@ int main () {
 
 int action () {
 	using namespace std;
+	/* We had talked about using the fields library and Ron was working on porting it over here, so I'll set this up using that.
 	string command;
 	getline(cin, command);
 	string b;
@@ -30,34 +34,43 @@ int action () {
 	//c_strings instead.
 
 	size_t pos = command.find(" ");
-	b = command.substr(0, pos);
-	if (b == "try" || b == "Try")
-		actionTry(command, pos+1);
-	else if (b == "check" || b == "Check")
-		actionCheck(command, pos+1);
-	else if (b == "help" || b == "Help")
+	b = command.substr(0, pos);*/
+	IS is = new_inputstruct();
+	int j = get_line();
+	if (j == -1)
+		return 0;
+	synonyms(is->fields[0]);
+	if (b == "try")
+		actionTry(is);
+	else if (b == "check")
+		actionCheck(is);
+	else if (b == "help")
 		actionHelp();
-	else if (useSynonyms(b))
-		actionUse(command, pos+1);
+	else if (b == "use")
+		actionUse(is);
 	else
 		badInput();
+	jettison_inputstruct();
 	return 1;
 }
 
-void actionUse(std::string in, size_t pos) {
+void actionUse(IS is) {
+	if (is->NF == 2){
+		
+	}
 	return;
 }
 
-void actionCheck(std::string in, size_t pos) {
+void actionCheck(IS is) {
 	return;
 }
 
-void actionTry(std::string in, size_t pos) {
+void actionTry(IS is) {
 	return;
 }
 
 void actionHelp() {
-	cout << "Try using an item, skill or spell." << endl
+	std::cout << "Try using an item, skill or spell." << endl
 		 << "You can check on the status of enemies and allies or list skills and spells." << endl;
 		 << "If you want to know what something will do, try an action." << endl;
 }
@@ -67,15 +80,26 @@ void badInput() {
 	cout << "Invalid input. Try again." << endl;
 }
 
-bool useSynonyms(std::string command) {
-	if (command == "use" || command == "Use")
-		return true;
-	else if (command == "eat" || command == "Eat")
-		return true;
-	else if (command == "drink" || command == "Drink")
-		return true;
-	else if (command == "cast" || command == "Cast")
-		return true;
-	else 
-		return false;
+void synonyms(char* b) {
+	b[0] = tolower(b[0]);
+	if (command == "use")
+		return;
+	else if (b == "try")
+		return;
+	else if (b == "check")
+		return;
+	else if (b == "help")
+		return;
+	else if (command == "eat"){
+		b = "use"
+		return;
+	}
+	else if (command == "drink"){
+		b = "use";
+		return;
+	}
+	else if (command == "cast"){
+		b = "use";
+		return;
+	}
 }
