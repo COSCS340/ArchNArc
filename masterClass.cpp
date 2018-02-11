@@ -21,23 +21,28 @@ MasterClass::MasterClass() {
 	if(tolower(ans) == 'y') {
 	//	fork and start server running seperately
 		p_id = fork();
-		if(p_id == 0) {
-			//be the server
-		} else {
-			//be the client
+		if(p_id == 0) { //be the server
+			//set up as server
+			//give user info needed to let other people join server
+		} else { //be the client
+			//wait a bit (to ensure server gets put up)
+			//check if server be working
 		}
 	} else {
-	//	try and join requested server
-	//	if success
-	//		return to main, which'll then call the client
-	//	else
-	//		fork and start server running seperately
-	//		p_id = fork();
-	//		if(p_id == 0) {
-	//			//be the server
-	//		} else {
-	//			//be the client
-	//		}
+		//ask what server they wanna join
+		//try and join requested server
+		//if success
+		//	return to main, which'll then call the client
+		//else
+		//	fork and start server running seperately
+		//	p_id = fork();
+		//	if(p_id == 0) { //be the server
+		//		//set up as server
+		//		//give user info needed to let other people join server
+		//	} else { //be the client
+		//		//wait a bit (to ensure server gets put up)
+		//		//check if server be working
+		//	}
 	}
 
 }
