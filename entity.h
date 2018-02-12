@@ -13,18 +13,18 @@ class Entity {
 	public:
 		Entity();
 		~Entity();
-		lvl();
-		str();
-		sli();
-		sta();
-		sol();
-		spi();
-		ser();
-		tick(); // Decrement actframes, and prompt for new action if action lock is over
-		print();
+		unsigned char lvl();
+		unsigned char serendipity();
+		unsigned char might();
+		unsigned char intelligence();
+		unsigned char grace();
+		unsigned char heart(); // Must make Captain Planet and Willard Wright jokes at some point!!!
+		unsigned char tenacity();
+		unsigned char tick(); // Decrement actframes, and prompt for new action if action lock is over
+		unsigned char act(int argc,char** args);
+		unsigned char print();
 	private:
-		byte lvl,str,sli,sta,sol,spi,ser;
+		unsigned char lvl,str,sli,sta,sol,spi,ser;
 		short actframes; // The counter for how many "frames" of action lock are active
-		string name;
-		
+		char* name;
 };
