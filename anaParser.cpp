@@ -1,21 +1,14 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
+#include <vector>
 #include <cstring>
 #include <cctype>
 #include "fields.h"
-
-const int MOVE = 0;
-const int ATTACK = 1;
-const int CHECK = 2;
-const int SKILL = 3;
-const int TAKE = 4;
-const int TALK = 5;
-const int MAP = 6;
+using namespace std;
 
 int action();
-int synonyms(char*);
-//void synonyms(char*);
+void synonyms(char*);
 void actionUse(IS);
 void actionCheck(IS);
 void actionTry(IS);
@@ -23,7 +16,6 @@ void actionHelp();
 void badInput();
 
 int main () {
-	using namespace std;
 	int j = 1;
 	while (j){
 		cout << "What would you like to do?" << endl;
@@ -32,120 +24,104 @@ int main () {
 }
 
 int action () {
-	using namespace std;
-	int selection;
-	/* We had talked about using the fields library and Ron was working on porting it over here, so I'll set this up using that.
-	string command;
-	getline(cin, command);
-	string b;
-
-	//Hey, Michaela here. This would be easier with strstr(), if you
-	//wanted to simplify searching strings. It'd just need to be with
-	//c_strings instead.
-
-	size_t pos = command.find(" ");
-	b = command.substr(0, pos);*/
-	IS is = new_inputstruct();
-	int j = get_line();
-	if (j == -1)
+	/* 	We had talked about using the fields library and Ron was working on 
+		porting it over here, so I'll set this up using that.
+		string command;
+	
+		//Hey, Michaela here. This would be easier with strstr(), if you
+		//wanted to simplify searching strings. It'd just need to be with
+		//c_strings instead.
+		
+		Ron - thinking about implementing the synonyms function using a vector
+		for each action that contain valid synonyms
+	*/
+	
+	//open inputstruct for reading stdin
+	IS is = new_inputstruct(NULL);	
+	
+	//pull player action -- return on fail
+	if(get_line(is) < 0);
 		return 0;
+	
+	//coverts all letters to lower case
 	for (int i = 0; i < is->NF; i++)
 		for (j = 0; fields[i][j] != 0; j++)
 			tolower(field[i][j]);
-	selections = synonyms(is->fields[0]);
-/*	if (b == "try")
+	
+	//check for action word synonyms
+	synonyms(is->fields[0]);
+	
+	//call action function
+	if (is->fields[0] == "try")
 		actionTry(is);
-	else if (b == "check")
+	else if (is->fields[0] == "check")
 		actionCheck(is);
-	else if (b == "help")
+	else if (is->fields[0] == "help")
 		actionHelp();
-	else if (b == "use")
+	else if (is->fields[0] == "use")
 		actionUse(is);
 	else
 		badInput();
-*/
-	switch(selections) {
-		case MOVE:
-
-		case ATTACK:
-
-		default:
-	}
-	jettison_inputstruct();
+	
+	//free memory and return
+	jettison_inputstruct(is);
 	return 1;
 }
 
+//use an item
 void actionUse(IS is) {
-	if (is->NF == 2){
-		
+	string item;
+	if (is->NF < 2){
+		cout << "Invalid input: no specified item to use.\n";
+		return;
+	}else{
+		//use item
 	}
 	return;
 }
 
+//look at available enemy stats
 void actionCheck(IS is) {
 	return;
 }
 
+//preview results of performing action
 void actionTry(IS is) {
 	return;
 }
 
+//input assistance
 void actionHelp() {
 	std::cout << "Try using an item, skill or spell." << endl
 		 << "You can check on the status of enemies and allies or list skills and spells." << endl;
 		 << "If you want to know what something will do, try an action." << endl;
 }
 
+//incorrect input 
 void badInput() {
-	using namespace std;
-	cout << "Invalid input. Try again." << endl;
+	cout << "Invalid input. Type 'help' for help." << endl;
 }
 
-//just trying out something new. If it don't work out, we'll go back to yours
-//I do believe we're planning on doing vectors of synonyms. In that case, my
-//basic idea stands that it'd be simpler to use constants and return the result,
-//we'd just need to loop through the vector for comparisons. IE
-//	for(int i = 0; i < move_vec.size(); i++) {
-//		if(strcmp(b, move_vec[i]) == 0) return(MOVE);
-//	}
-int synonyms(char* b) {
-	if(strcmp(b, "go") == 0 || strcmp(b, "walk") == 0 || strcmp(b, "move") == 0) {
-		return(MOVE);
-	}
-	
-	if(strcmp(b, "attack") == 0 || strcmp(b, "hit") == 0 || strcmp(b, "bash") == 0) {
-		return(ATTACK);
-	}
-	
-	if(strcmp(b, "check") == 0 || strcmp(b, "scan") == 0 || strcmp(b, "examine") == 0) {
-		return(CHECK);
-	}
-
-	if(strcmp(b, "take") == 0 || strcmp(b, "grab") == 0 || strcmp(b, "snatch") == 0) {
-		return(TAKE);
-	}
-}
-/*
-void synonyms(char* b) {
-	if (command == "use")
+void synonyms(char* action) {
+	if (action == "use")
 		return;
-	else if (b == "try")
+	else if (action == "try")
 		return;
-	else if (b == "check")
+	else if (action == "check")
 		return;
-	else if (b == "help")
+	else if (action == "help")
 		return;
-	else if (command == "eat"){
-		b = "use"
+	else if (action == "eat"){
+		action = "use"
 		return;
 	}
-	else if (command == "drink"){
+	else if (action == "drink"){
 		b = "use";
 		return;
 	}
-	else if (command == "cast"){
+	else if (action == "cast"){
 		b = "use";
 		return;
 	}
+	else if (
 }
-*/
