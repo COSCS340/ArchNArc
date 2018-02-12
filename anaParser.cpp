@@ -7,8 +7,17 @@
 #include "fields.h"
 using namespace std;
 
+const int MOVE = 0;	
+const int ATTACK = 1;	
+const int CHECK = 2;	
+const int SKILL = 3;	
+const int TAKE = 4;	
+const int TALK = 5;	
+const int MAP = 6;
+
 int action();
-void synonyms(char*);
+int synonyms(char*);
+//void synonyms(char*);
 void actionUse(IS);
 void actionCheck(IS);
 void actionTry(IS);
@@ -35,9 +44,10 @@ int action () {
 		Ron - thinking about implementing the synonyms function using a vector
 		for each action that contain valid synonyms
 	*/
+	int selection;
 	
 	//open inputstruct for reading stdin
-	IS is = new_inputstruct(NULL);	
+	IS is = new_inputstruct(NULL);
 	
 	//pull player action -- return on fail
 	if(get_line(is) < 0);
@@ -49,8 +59,8 @@ int action () {
 			tolower(field[i][j]);
 	
 	//check for action word synonyms
-	synonyms(is->fields[0]);
-	
+	selections = synonyms(is->fields[0]);
+/*	
 	//call action function
 	if (is->fields[0] == "try")
 		actionTry(is);
@@ -62,6 +72,14 @@ int action () {
 		actionUse(is);
 	else
 		badInput();
+*/
+	switch(selection){
+		case MOVE:
+			
+		case ATTACK:
+		
+		default:
+	}
 	
 	//free memory and return
 	jettison_inputstruct(is);
@@ -102,6 +120,32 @@ void badInput() {
 	cout << "Invalid input. Type 'help' for help." << endl;
 }
 
+//just trying out something new. If it don't work out, we'll go back to yours	+void synonyms(char* action) {
+//I do believe we're planning on doing vectors of synonyms. In that case, my	+	if (action == "use")
+//basic idea stands that it'd be simpler to use constants and return the result,	
+//we'd just need to loop through the vector for comparisons. IE	
+//	for(int i = 0; i < move_vec.size(); i++) {	
+//		if(strcmp(b, move_vec[i]) == 0) return(MOVE);	
+//	}	
+int synonyms(char* b) {	
+	if(strcmp(b, "go") == 0 || strcmp(b, "walk") == 0 || strcmp(b, "move") == 0) {	
+		return(MOVE);	
+	}	
+		
+	if(strcmp(b, "attack") == 0 || strcmp(b, "hit") == 0 || strcmp(b, "bash") == 0) {	
+		return(ATTACK);	
+	}	
+		
+	if(strcmp(b, "check") == 0 || strcmp(b, "scan") == 0 || strcmp(b, "examine") == 0) {	
+		return(CHECK);	
+	}	
+	
+	if(strcmp(b, "take") == 0 || strcmp(b, "grab") == 0 || strcmp(b, "snatch") == 0) {	
+		return(TAKE);	
+	}	
+}
+
+/*
 void synonyms(char* action) {
 	if (action == "use")
 		return;
@@ -125,3 +169,4 @@ void synonyms(char* action) {
 	}
 	else if (
 }
+*/
