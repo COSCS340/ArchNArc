@@ -39,6 +39,9 @@ int action () {
 	int j = get_line();
 	if (j == -1)
 		return 0;
+	for (int i = 0; i < is->NF; i++)
+		for (j = 0; fields[i][j] != 0; j++)
+			tolower(field[i][j]);
 	synonyms(is->fields[0]);
 	if (b == "try")
 		actionTry(is);
@@ -81,7 +84,6 @@ void badInput() {
 }
 
 void synonyms(char* b) {
-	b[0] = tolower(b[0]);
 	if (command == "use")
 		return;
 	else if (b == "try")
