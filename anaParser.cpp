@@ -5,8 +5,17 @@
 #include <cctype>
 #include "fields.h"
 
+const int MOVE = 0;
+const int ATTACK = 1;
+const int CHECK = 2;
+const int SKILL = 3;
+const int TAKE = 4;
+const int TALK = 5;
+const int MAP = 6;
+
 int action();
-void synonyms(char*);
+int synonyms(char*);
+//void synonyms(char*);
 void actionUse(IS);
 void actionCheck(IS);
 void actionTry(IS);
@@ -24,6 +33,7 @@ int main () {
 
 int action () {
 	using namespace std;
+	int selection;
 	/* We had talked about using the fields library and Ron was working on porting it over here, so I'll set this up using that.
 	string command;
 	getline(cin, command);
@@ -42,8 +52,8 @@ int action () {
 	for (int i = 0; i < is->NF; i++)
 		for (j = 0; fields[i][j] != 0; j++)
 			tolower(field[i][j]);
-	synonyms(is->fields[0]);
-	if (b == "try")
+	selections = synonyms(is->fields[0]);
+/*	if (b == "try")
 		actionTry(is);
 	else if (b == "check")
 		actionCheck(is);
@@ -53,6 +63,14 @@ int action () {
 		actionUse(is);
 	else
 		badInput();
+*/
+	switch(selections) {
+		case MOVE:
+
+		case ATTACK:
+
+		default:
+	}
 	jettison_inputstruct();
 	return 1;
 }
@@ -83,6 +101,31 @@ void badInput() {
 	cout << "Invalid input. Try again." << endl;
 }
 
+//just trying out something new. If it don't work out, we'll go back to yours
+//I do believe we're planning on doing vectors of synonyms. In that case, my
+//basic idea stands that it'd be simpler to use constants and return the result,
+//we'd just need to loop through the vector for comparisons. IE
+//	for(int i = 0; i < move_vec.size(); i++) {
+//		if(strcmp(b, move_vec[i]) == 0) return(MOVE);
+//	}
+int synonyms(char* b) {
+	if(strcmp(b, "go") == 0 || strcmp(b, "walk") == 0 || strcmp(b, "move") == 0) {
+		return(MOVE);
+	}
+	
+	if(strcmp(b, "attack") == 0 || strcmp(b, "hit") == 0 || strcmp(b, "bash") == 0) {
+		return(ATTACK);
+	}
+	
+	if(strcmp(b, "check") == 0 || strcmp(b, "scan") == 0 || strcmp(b, "examine") == 0) {
+		return(CHECK);
+	}
+
+	if(strcmp(b, "take") == 0 || strcmp(b, "grab") == 0 || strcmp(b, "snatch") == 0) {
+		return(TAKE);
+	}
+}
+/*
 void synonyms(char* b) {
 	if (command == "use")
 		return;
@@ -105,3 +148,4 @@ void synonyms(char* b) {
 		return;
 	}
 }
+*/

@@ -35,6 +35,8 @@ class UseItem {
 
 class Skill {
 	public:
+
+	private:
 		string name;
 		int effect_size; //for attack value, heal value, etc
 		int skill_type; //ie 1 for attack, 2 for heal, etc

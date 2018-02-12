@@ -27,7 +27,7 @@ void Entity::addEquipment(EquipItem a) {
 	
 }
 
-void Entity::addUseable(UseItem) {
+void Entity::addUseable(UseItem a) {
 	
 }
 
