@@ -1,0 +1,9 @@
+arcnet: A socket wrapper by Jonathan Redington
+
+This small program should be run in its own fork() branch, as that is the context it is designed for.
+
+init(int i,int o);
+This function initializes the program by taking file descriptors for the reading end of the input pipe and the writing end of the output pipe.
+
+tick();
+This function loops internally and manages transmissions through the socket
