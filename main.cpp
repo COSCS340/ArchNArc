@@ -29,4 +29,4 @@ int main(int argc,char** args) {
 	cterm();
 	int i;
 	if(spid) wait(&i);
-]
+}
