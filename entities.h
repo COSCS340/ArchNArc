@@ -33,6 +33,16 @@ class UseItem {
 		int effect_size; //says how much it heals, or whatever. No clue what the plan is here...
 };
 
+class Skill {
+	public:
+		string name;
+		int effect_size; //for attack value, heal value, etc
+		int skill_type; //ie 1 for attack, 2 for heal, etc
+		int mp_cost;
+		int accuracy;
+		string element;
+};
+
 class Entity {
 	public:
 		void setUpChar(string n, string j); //given name and job, initialize character
@@ -45,6 +55,7 @@ class Entity {
 		string species;
 		map<string, EquipItem> equipment; //mapped under type, ie "HAT", "TORSO", "WEAPON", etc.
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.
+		map<string, Skill> skills; //mapped under name of skill
 		int cash;
 		
 		int serendipity;

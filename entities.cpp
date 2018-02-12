@@ -32,6 +32,21 @@ void Entity::addUseable(UseItem) {
 }
 
 void Entity::listAttributes() {
-	vector<string, EquipItem>::iterator e_it;
-	vector<string, UseItem>::iterator u_it;
+	map<string, EquipItem>::iterator e_it;
+	map<string, UseItem>::iterator u_it;
+	map<string, Skill>::iterator s_it;
+
+	printf("\n%30sGold: %d\n", name.c_str(), cash);
+	printf("Species: %s\n", species.c_str());
+	printf("Class: %s\n\n", job.c_str());
+	printf("Current stats\n-----------------------\n");
+	printf("HP %3d/%3d        MP %3d/%3d", cur_hp, max_hp, cur_mp, max_mp);
+	printf("Serendipity      %d\n", serendipity);
+	printf("Might            %d\n", might);
+	printf("Intelligence     %d\n", intelligence);
+	printf("Grace            %d\n", grace);
+	printf("Heart            %d\n", heart);
+	printf("Tenacity         %d\n", tenacity);
+
+	//print equipment, useables, and skills
 }
