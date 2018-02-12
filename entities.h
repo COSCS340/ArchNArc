@@ -42,16 +42,17 @@ class Entity {
 	private:
 		string name;
 		string job;
+		string species;
 		map<string, EquipItem> equipment; //mapped under type, ie "HAT", "TORSO", "WEAPON", etc.
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.
 		int cash;
 		
-		int strength;
-		int grace;
-		int stamina;
+		int serendipity;
+		int might;
 		int intelligence;
-		int spirit;
-		int luck;
+		int grace;
+		int heart;
+		int tenacity;
 		int max_hp;
 		int cur_hp;
 		int max_mp;

@@ -10,12 +10,12 @@ void Entity::setUpChar(string n, string j) {
 	
 	if(job == "Prism Wizard") { //or whatever job
 		//just throwing out numbers. Finalize later
-		strength = 1;
-		grace = 2;
-		stamina = 2;
+		serendipity = 3;
+		might = 1;
 		intelligence = 4;
-		spirit = 4;
-		luck = 3;
+		grace = 2;
+		heart = 4;
+		tenacity = 2;
 		max_hp = 20;
 		cur_hp = max_hp;
 		max_mp = 20;
