@@ -7,12 +7,12 @@
 #include "fields.h"
 using namespace std;
 
-const int MOVE = 0;	
-const int ATTACK = 1;	
-const int CHECK = 2;	
-const int SKILL = 3;	
-const int TAKE = 4;	
-const int TALK = 5;	
+const int MOVE = 0;
+const int ATTACK = 1;
+const int CHECK = 2;
+const int SKILL = 3;
+const int TAKE = 4;
+const int TALK = 5;
 const int MAP = 6;
 
 int action();
@@ -120,9 +120,9 @@ void badInput() {
 	cout << "Invalid input. Type 'help' for help." << endl;
 }
 
-//just trying out something new. If it don't work out, we'll go back to yours	+void synonyms(char* action) {
-//I do believe we're planning on doing vectors of synonyms. In that case, my	+	if (action == "use")
-//basic idea stands that it'd be simpler to use constants and return the result,	
+//just trying out something new. If it don't work out, we'll go back to yours
+//I do believe we're planning on doing vectors of synonyms. In that case, my
+//basic idea stands that it'd be simpler to use constants and return the result,
 //we'd just need to loop through the vector for comparisons. IE	
 //	for(int i = 0; i < move_vec.size(); i++) {	
 //		if(strcmp(b, move_vec[i]) == 0) return(MOVE);	

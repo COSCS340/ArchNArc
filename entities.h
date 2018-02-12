@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include "job.h"
 
 using namespace std;
 
@@ -54,7 +55,7 @@ class Entity {
 	private:
 		string name;
 		//string job;
-		//Job job;
+		Job job;
 		string species;
 		map<string, EquipItem> equipment; //mapped under type, ie "HAT", "TORSO", "WEAPON", etc.
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.
