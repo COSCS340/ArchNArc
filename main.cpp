@@ -28,5 +28,6 @@ int main(int argc,char** args) {
 	if(crun()) exit(1);
 	if(cterm()) exit(1);
 	int i;
+	jettison_inputstruct(in);
 	if(spid) wait(&i);
 }
