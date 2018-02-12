@@ -13,7 +13,7 @@ class Entity {
 	public:
 		Entity();
 		~Entity();
-		unsigned char lvl();
+		unsigned char level();
 		unsigned char serendipity();
 		unsigned char might();
 		unsigned char intelligence();
@@ -24,7 +24,7 @@ class Entity {
 		unsigned char act(int argc,char** args);
 		unsigned char print();
 	private:
-		unsigned char lvl,str,sli,sta,sol,spi,ser;
+		unsigned char level,serendipity,might,intelligence,grace,heart,tenacity;
 		short actframes; // The counter for how many "frames" of action lock are active
 		char* name;
 };
