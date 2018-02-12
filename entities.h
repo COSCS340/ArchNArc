@@ -51,7 +51,8 @@ class Entity {
 		void listAttributes(); //list all info on character in nice format
 	private:
 		string name;
-		string job;
+		//string job;
+		//Job job;
 		string species;
 		map<string, EquipItem> equipment; //mapped under type, ie "HAT", "TORSO", "WEAPON", etc.
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.

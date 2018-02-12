@@ -38,8 +38,8 @@ void Entity::listAttributes() {
 
 	printf("\n%30sGold: %d\n", name.c_str(), cash);
 	printf("Species: %s\n", species.c_str());
-	printf("Class: %s\n\n", job.c_str());
-	printf("Current stats\n-----------------------\n");
+	//printf("Class: %s\n\n", job.c_str());
+	printf("\nCurrent stats\n-----------------------\n");
 	printf("HP %3d/%3d        MP %3d/%3d", cur_hp, max_hp, cur_mp, max_mp);
 	printf("Serendipity      %d\n", serendipity);
 	printf("Might            %d\n", might);
@@ -48,5 +48,20 @@ void Entity::listAttributes() {
 	printf("Heart            %d\n", heart);
 	printf("Tenacity         %d\n", tenacity);
 
-	//print equipment, useables, and skills
+	//print skills
+	printf("\nEquipment    \n-----------------------\n");
+	for(e_it = equipment.begin(); e_it != equipment.end(); e_it++) {
+		printf("%15s %s\n", e_it->first, e_it->second.name);
+	}
+
+	printf("\nSupplies     \n-----------------------\n");
+	for(u_it = useables.begin(); u_it != useables.end(); u_it++) {
+		printf("%15s %d\n", u_it->first, e_it->second.how_many);
+	}
+
+	printf("\nSkills       \n-----------------------\n");
+	for(s_it = skills.begin(); s_it != skills.end(); s_it++) {
+		printf("%15s\n", s_it->first);
+	}
+	printf("\n");
 }
