@@ -19,14 +19,14 @@ int main(int argc,char** args) {
 	if(strcmp(in->fields[0],"0")) {
 		spid = fork();
 		if(!spid) {
-			sinit();
-			srun();
-			sterm();
+			if(sinit()) exit(1);
+			if(srun()) exit(1);
+			if(sterm()) exit(1);
 		}
 	}
-	cinit();
-	crun();
-	cterm();
+	if(cinit()) exit(1);
+	if(crun()) exit(1);
+	if(cterm()) exit(1);
 	int i;
 	if(spid) wait(&i);
 }
