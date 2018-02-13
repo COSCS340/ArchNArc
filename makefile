@@ -15,7 +15,7 @@ clean:
 
 .SUFFIXES: .c .o
 main.o:
-	$(CC) $(CFLAGS) -c main.c
+	$(CC) $(CFLAGS) -c main.cpp
 
 master: main.o
 	$(CC) -o master main.o

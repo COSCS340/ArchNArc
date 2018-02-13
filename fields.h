@@ -12,9 +12,9 @@ typedef struct inputstruct {
     int file;                 /* 1 for file, 0 for popen */
 } *IS;
 
-extern IS new_inputstruct(/* FILENAME -- NULL for stdin */);
-extern IS pipe_inputstruct(/* COMMAND -- NULL for stdin */);
-extern int get_line(/* IS */); /* returns NF, or -1 on EOF.  Does not
+extern IS new_inputstruct(char*);
+extern IS pipe_inputstruct(char*);
+extern int get_line(IS); /* returns NF, or -1 on EOF.  Does not
                                   close the file */
-extern void jettison_inputstruct(/* IS */);  /* frees the IS and fcloses 
+extern void jettison_inputstruct(IS);  /* frees the IS and fcloses 
                                                 the file */

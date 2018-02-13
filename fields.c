@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include "fields.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 #define talloc(ty, sz) (ty *) malloc (sz * sizeof(ty))
 #define strdup(s) ((char *) strcpy(talloc(char, strlen(s)+1), s))
 
-static IS make_inputstruct(filename, key)
-    char *filename; 
-    char *key;               /* "f" for regular file or stdin if filename is NULL */
-    /* "p" if filename is a command for popen */
-{
+static IS make_inputstruct(char* filename,char* key) { /* "f" for regular file or stdin if filename is NULL */
+                                                       /* "p" if filename is a command for popen */
     IS is;
     int file;
 
@@ -44,23 +43,15 @@ static IS make_inputstruct(filename, key)
     return is;
 }
 
-
-
-IS new_inputstruct(filename)   /* use NULL for stdin.  Calls malloc */
-    char *filename;
-{
+IS new_inputstruct(char* filename) { /* use NULL for stdin.  Calls malloc */
     return make_inputstruct(filename, "f");
 }
 
-IS pipe_inputstruct(command)
-    char *command;
-{
+IS pipe_inputstruct(char* command) {
     return make_inputstruct(command, "p");
 }
 
-int get_line(is)
-    IS is;
-{
+int get_line(IS is) {
     int i, len;
     int f;
     char *tmp;
@@ -94,9 +85,7 @@ int get_line(is)
     return is->NF;
 }
 
-void jettison_inputstruct(is)
-    IS is;
-{
+void jettison_inputstruct(IS is) {
     if (is->f != stdin) {
         if (is->file) {
             fclose(is->f);

@@ -4,32 +4,33 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <signal.h>
-#include <planksockets.c>
+//#include "planksockets.cpp"
+
+typedef unsigned char byte;
 
 int main(int argc,char** argv) {
     if(argc != 2) {
         fprintf(stderr," usage: arcnet [s|c]\n");
         exit(1);
     }
-    if(init(0,1)) exit(1);
-    if(tick()) exit(1);
-    if(term()) exit(1);
+    if(rinit(0,1,0)) exit(1);
+    if(rtick()) exit(1);
+    if(rterm()) exit(1);
     exit(0);
 }
 
-int ifd,ofd;
-unsigned char DEBUG=1;
+int ifd,ofd,pc;
+byte DEBUG=1;
 
-unsigned char rinit(int i,int o,int pc) { // Takes two FDs, which should each be part of a pipe pairing
+byte rinit(int i,int o,int pc) { // Takes two FDs, which should each be part of a pipe pairing
     if(DEBUG) printf("arcnet: entering init(%d,%d)\n",i,o);
     ifd = i;
     ofd = o;
-
     if(DEBUG) printf("arcnet: exiting init(%d,%d)\n",i,o);
     return 0;
 }
 
-unsigned char rtick() { // Executes an internal loop that exits when necessary
+byte rtick() { // Executes an internal loop that exits when necessary
     if(DEBUG) printf("arcnet: entering rtick()\n");
     unsigned char nd=1,r=0;
     while(nd) {
