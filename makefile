@@ -17,7 +17,11 @@ clean:
 main.o:
 	$(CC) $(CFLAGS) -c main.cpp
 
+fields.o:
+	$(CC) $(CGLAGS) -c fields.c
+
 master: main.o
-	$(CC) -o master main.o
+	$(CC) -o master main.o fields.o
+
 #master: main.o
 #	$(CC) -g -o test_malloc malloc.o test_malloc.o $(LIBS)
