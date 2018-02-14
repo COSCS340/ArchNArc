@@ -7,6 +7,15 @@
 #include "fields.h"
 using namespace std;
 
+/* 
+commands to be supported (working list)
+    use = {drink, eat, use}
+    check = {open, look}
+    try
+    move = {walk, go}
+    attack = {hit, bash, slash, ... }
+*/
+
 const int MOVE = 0;
 const int ATTACK = 1;
 const int CHECK = 2;
