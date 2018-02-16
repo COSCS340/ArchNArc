@@ -33,5 +33,6 @@ bool playerInDungeon(set<Entity> sEntity) {
 }
 
 bool inBattle (set<Entity> sEntity) {
-	
+	return false;
+	//Not sure how we will be storing rooms, just need to check and see if enemies are in the room with the player 
 }
