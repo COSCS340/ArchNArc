@@ -2,6 +2,9 @@
 #include <iterator>
 #include "entities.h"
 
+bool playerInDungeon(set<Entity> sEntity);
+bool inBattle (set<Entity> sEntity);
+
 void handler(set<Entity> sEntity, set<Entity> inTown) {
     while(){
 	set<Entity>::iterator it;    
