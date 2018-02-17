@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -52,8 +53,9 @@ class Entity {
 		void addEquipment(EquipItem);
 		void addUseable(UseItem);
 		void listAttributes(); //list all info on character in nice format
-		void tick(int, std::set<Entity> inDungeon);
+		void tick(int, multiset<Entity>& inDungeon);
 		bool operator< (Entity E);
+		int getCooldown() {return cooldown;}
 	private:
 		string name;
 		//string job;
@@ -74,7 +76,7 @@ class Entity {
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
-		void act(std::set<Entity> inDungeon);
+		void act(multiset<Entity>& inDungeon);
 };
 
 class Zone {
