@@ -52,6 +52,8 @@ class Entity {
 		void addEquipment(EquipItem);
 		void addUseable(UseItem);
 		void listAttributes(); //list all info on character in nice format
+		void tick(int, std::set<Entity> inDungeon);
+		bool operator< (Entity E);
 	private:
 		string name;
 		//string job;
@@ -61,7 +63,7 @@ class Entity {
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.
 		map<string, Skill> skills; //mapped under name of skill
 		int cash;
-		
+		int cooldown;
 		int serendipity;
 		int might;
 		int intelligence;
@@ -72,6 +74,7 @@ class Entity {
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
+		void act(std::set<Entity> inDungeon);
 };
 
 class Zone {
