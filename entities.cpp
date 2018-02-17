@@ -1,6 +1,7 @@
 /*
  *
  */
+#include <set>
 #include "entities.h"
 
 void Entity::setUpChar(string n, string j) {
@@ -64,4 +65,23 @@ void Entity::listAttributes() {
 		printf("%15s\n", s_it->first);
 	}
 	printf("\n");
+}
+
+void Entity::tick (int tFactor, multiset <Entity>& inDungeon) {
+	if (cooldown < tFactor){
+		cooldown = 0;
+		act(inDungeon);
+	}
+	cooldown -= tFactor;
+	if (cooldown == 0)
+		act(inDungeon);
+}
+
+void Entity::act(multiset <Entity>& inDungeon) {
+	action();
+	// Then take parsed data and perform actions
+}
+
+bool Entity::operator< (Entity e){
+	return coolDown < e.getCooldown();
 }
