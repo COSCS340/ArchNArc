@@ -5,9 +5,9 @@
 bool playerInDungeon(set<Entity> sEntity);
 bool inBattle (set<Entity> sEntity);
 
-void handler(set<Entity> sEntity, set<Entity> inTown) {
+void handler(std::multiset<Entity> sEntity, set<Entity> inTown) {
     while(){
-	set<Entity>::iterator it;    
+	std::multiset<Entity>::iterator it;    
 	int tFactor = 100;
 	if (playerInDungeon(sEntity)){
 		if (inBattle(sEntity))
@@ -16,11 +16,11 @@ void handler(set<Entity> sEntity, set<Entity> inTown) {
 			tFactor = 10;
 		it = sEntity.begin();
 		for (; it != sEntity.end(); it++)
-			it->tick(tFactor);
+			it->tick(tFactor, sEntity);
 	}
 	it = inTown.begin();
 	for (; it != inTown.end(); it++)
-		it->tick(tFactor);
+		it->tick(tFactor, sEntity);
 	if ()// need to exit
 		break;
     }
