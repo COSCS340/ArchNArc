@@ -1,5 +1,8 @@
 #define MAXLEN 1001
 #define MAXFIELDS 1000
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
 typedef struct inputstruct {
     char *name;               /* File name */

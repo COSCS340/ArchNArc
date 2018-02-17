@@ -3,7 +3,7 @@ CC = g++
 #CLASSDIR = /home/huangj/cs360
 #CDIR = /home/cs360
 #INCLUDES = $(CLASSDIR)/include
-CFLAGS = -Wall -g -I#$(INCLUDES)
+CFLAGS = -Wall -g #-I$(INCLUDES)
 #LIBDIR = $(CDIR)/pub
 #LIBS = $(LIBDIR)/libfdr.a
 EXECUTABLES = master
@@ -20,7 +20,7 @@ main.o:
 fields.o:
 	$(CC) $(CGLAGS) -c fields.c
 
-master: main.o
+master: main.o fields.o
 	$(CC) -o master main.o fields.o
 
 #master: main.o
