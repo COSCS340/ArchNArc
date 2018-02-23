@@ -6,7 +6,7 @@
 
 void Entity::setUpChar(string n, string j) {
 	name = n;
-	job = j;
+	//job = j;
 	cash = 500; //or whatever we let them start with
 	
 	if(job == "Prism Wizard") { //or whatever job
@@ -39,7 +39,7 @@ void Entity::listAttributes() {
 
 	printf("\n%30sGold: %d\n", name.c_str(), cash);
 	printf("Species: %s\n", species.c_str());
-	//printf("Class: %s\n\n", job.c_str());
+	printf("Class: %s\n\n", job.name.c_str());
 	printf("\nCurrent stats\n-----------------------\n");
 	printf("HP %3d/%3d        MP %3d/%3d", cur_hp, max_hp, cur_mp, max_mp);
 	printf("Serendipity      %d\n", serendipity);
