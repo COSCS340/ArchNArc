@@ -56,6 +56,7 @@ class Entity {
 		void tick(int, multiset<Entity>& inDungeon);
 		bool operator< (Entity E);
 		int getCooldown() {return cooldown;}
+		int getGrace() {return grace;}
 	private:
 		string name;
 		//string job;
