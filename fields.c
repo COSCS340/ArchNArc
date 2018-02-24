@@ -2,6 +2,8 @@
 #include "fields.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
+#include <ctype.h>
 
 #define talloc(ty, sz) (ty *) malloc (sz * sizeof(ty))
 #define strdup(s) ((char *) strcpy(talloc(char, strlen(s)+1), s))
