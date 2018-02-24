@@ -83,5 +83,5 @@ void Entity::act(multiset <Entity>& inDungeon) {
 }
 
 bool Entity::operator< (Entity e){
-	return coolDown < e.getCooldown();
+	return grace < e.getGrace();
 }
