@@ -49,6 +49,9 @@ class Skill {
 
 class Entity {
 	public:
+		Entity();
+		Entity(char[]);
+		Entity(int);
 		void setUpChar(string n, string j); //given name and job, initialize character
 		void addEquipment(EquipItem);
 		void addUseable(UseItem);
