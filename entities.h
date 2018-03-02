@@ -47,6 +47,8 @@ class Skill {
 		string element;
 };
 
+string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
+
 class Entity {
 	public:
 		void setUpChar(string n, string j); //given name and job, initialize character
