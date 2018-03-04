@@ -51,11 +51,15 @@ class Skill {
 
 class Entity {
 	public:
-        static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
-        static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
-        static const string RACES[]={"human","chosen"};
-        static const byte RACEATTS[][] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
-        static const string JOBS[]={"fightard"};
+		Entity();
+		Entity(char[]);
+		Entity(int);
+		void setUpChar(string n, string j); //given name and job, initialize characters
+    static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
+    static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
+    static const string RACES[]={"human","chosen"};
+    static const byte RACEATTS[][] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
+    static const string JOBS[]={"fightard"};
 
 		void setUpChar(string n, byte r); //given name and race, initialize character
 		void addEquipment(EquipItem);
