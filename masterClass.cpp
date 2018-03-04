@@ -1,4 +1,4 @@
-/*
+/* OBSOLETE!!!!!!!!!
  *
  */
 #include "masterClass.h"

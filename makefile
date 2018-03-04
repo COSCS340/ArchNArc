@@ -18,10 +18,16 @@ main.o:
 	$(CC) $(CFLAGS) -c main.cpp
 
 fields.o:
-	$(CC) $(CGLAGS) -c fields.c
+	$(CC) $(CFLAGS) -c fields.c
 
-master: main.o fields.o
-	$(CC) -o master main.o fields.o
+entities.o:
+	$(CC) $(CFLAGS) -c entities.cpp
 
-#master: main.o
-#	$(CC) -g -o test_malloc malloc.o test_malloc.o $(LIBS)
+#handler.o:
+#	$(CC) $(CFLAGS) -c handler.cpp
+
+master: main.o fields.o entities.o
+	$(CC) -o master main.o fields.o entities.o
+
+#master: main.o fields.o entities.o handler.o
+#	$(CC) -o master main.o fields.o entities.o handler.o

@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include "fields.h"
+#include "entities.h"
 using namespace std;
 
 typedef unsigned char byte;
@@ -22,6 +23,9 @@ int main(int argc,char** args) {
 	if(crun()) return 1;
 	if(cterm()) return 1;
 	int i;
+
+	Entity ne;
+
 	jettison_inputstruct(in);
 	if(spid) wait(&i);
 }
