@@ -86,24 +86,15 @@ Entity::Entity(string fileName) {
 	
 }
 
-void Entity::setUpChar(string n, string j) {
+typedef unsigned char byte;
+
+void Entity::setUpChar(string n, byte r) {
 	name = n;
 	//job = j;
 	cash = 500; //or whatever we let them start with
-	
-	if(job == "Prism Wizard") { //or whatever job
-		//just throwing out numbers. Finalize later
-		serendipity = 3;
-		might = 1;
-		intelligence = 4;
-		grace = 2;
-		heart = 4;
-		tenacity = 2;
-		max_hp = 20;
-		cur_hp = max_hp;
-		max_mp = 20;
-		cur_mp = max_hp;
-	} //else if(job == ) { //however many jobs we got
+	attributes = malloc(6);
+    memcpy(attributes,RACEATTS[r],6);
+} //else if(job == ) { //however many jobs we got
 }
 
 void Entity::addEquipment(EquipItem a) {
@@ -124,12 +115,8 @@ void Entity::listAttributes() {
 	printf("Class: %s\n\n", job.name.c_str());
 	printf("\nCurrent stats\n-----------------------\n");
 	printf("HP %3d/%3d        MP %3d/%3d", cur_hp, max_hp, cur_mp, max_mp);
-	printf("Serendipity      %d\n", serendipity);
-	printf("Might            %d\n", might);
-	printf("Intelligence     %d\n", intelligence);
-	printf("Grace            %d\n", grace);
-	printf("Heart            %d\n", heart);
-	printf("Tenacity         %d\n", tenacity);
+    byte i;
+	for(i=0;i<6;i++) printf("%-11s %d\n",ATTNAMES[i],attributes[i]);
 
 	//print skills
 	printf("\nEquipment    \n-----------------------\n");
@@ -150,13 +137,11 @@ void Entity::listAttributes() {
 }
 
 void Entity::tick (int tFactor, multiset <Entity>& inDungeon) {
-	if (cooldown < tFactor){
+	if (cooldown <= tFactor){
 		cooldown = 0;
 		act(inDungeon);
 	}
 	cooldown -= tFactor;
-	if (cooldown == 0)
-		act(inDungeon);
 }
 
 void Entity::act(multiset <Entity>& inDungeon) {

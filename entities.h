@@ -13,6 +13,8 @@
 
 using namespace std;
 
+typedef unsigned char byte;
+
 class EquipItem {
 	public:
 
@@ -52,7 +54,14 @@ class Entity {
 		Entity();
 		Entity(char[]);
 		Entity(int);
-		void setUpChar(string n, string j); //given name and job, initialize character
+		void setUpChar(string n, string j); //given name and job, initialize characters
+    static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
+    static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
+    static const string RACES[]={"human","chosen"};
+    static const byte RACEATTS[][] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
+    static const string JOBS[]={"fightard"};
+
+		void setUpChar(string n, byte r); //given name and race, initialize character
 		void addEquipment(EquipItem);
 		void addUseable(UseItem);
 		void listAttributes(); //list all info on character in nice format
@@ -65,17 +74,13 @@ class Entity {
 		//string job;
 		Job job;
 		string species;
+        byte alignment;
 		map<string, EquipItem> equipment; //mapped under type, ie "HAT", "TORSO", "WEAPON", etc.
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.
 		map<string, Skill> skills; //mapped under name of skill
 		int cash;
 		int cooldown;
-		int serendipity;
-		int might;
-		int intelligence;
-		int grace;
-		int heart;
-		int tenacity;
+		int attributes[];
 		int max_hp;
 		int cur_hp;
 		int max_mp;
