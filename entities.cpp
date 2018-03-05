@@ -229,6 +229,7 @@ void Entity::save() {
 	map<string, byte>::iterator b_it;
 	map<string, EquipItem>::iterator c_it;
 	map<string, UseItem>::iterator d_it;
+	map<string, int>::iterator e_it;
 
 	for(i = 0; name[i] != '\0'; i++) {
 		filename[i] = tolower(name[i]);
@@ -272,7 +273,7 @@ void Entity::save() {
 		output << a_it->second.element << endl;
 		
 		output << a_it->second.prereqs.size() << endl;
-		for(b_it = a_it->prereqs.begin(); b_it != a_it->prereqs.end(); b_it++) {
+		for(b_it = a_it->second.prereqs.begin(); b_it != a_it->second.prereqs.end(); b_it++) {
 			output << b_it->first << endl;
 			output << b_it->second << endl;
 		}
@@ -282,13 +283,25 @@ void Entity::save() {
 	output << equipment.size() << endl;
 	for(c_it = equipment.begin(); c_it != equipment.end(); c_it++) {
 		output << c_it->first << endl;
-		//write all the stuff
+		output << c_it->second.name << endl;
+		output << c_it->second.type << endl;
+		output << c_it->second.attack << endl;
+		output << c_it->second.defence << endl;
+
+		output << c_it->second.elemental.size() << endl;
+		for(e_it = c_it->second.elemental.begin(); e_it != c_it->second.elemental.end(); e_it++) {
+			output << e_it->first << endl;
+			output << e_it->second << endl;
+		}
 	}
 
 	output << useables.size() << endl;
 	for(d_it = useables.begin(); d_it != useables.end(); d_it++) {
 		output << d_it->first << endl;
-		//write all the stuff
+		output << d_it->second.name << endl;
+		output << d_it->second.type << endl;
+		output << d_it->second.how_many << endl;
+		output << d_it->second.effect_size << endl;
 	}
 
 	output.close();
