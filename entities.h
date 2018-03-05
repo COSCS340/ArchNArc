@@ -106,7 +106,7 @@ class Entity {
 		int level;
 		int cooldown;
 		int grace;
-		int *attributes;
+		byte *attributes;
 		int max_hp;
 		int cur_hp;
 		int max_mp;

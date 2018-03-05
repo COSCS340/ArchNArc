@@ -154,7 +154,7 @@ void Entity::setUpChar(byte r) {
 	job.name = JOBS[r];
 
 	//why is attributes an array of ints, yet here is treated like an array of byes?
-	attributes = (int*)malloc(6);
+	attributes = malloc(6);
     memcpy(attributes,RACEATTS[r],6);
 
 }
@@ -178,7 +178,7 @@ void Entity::listAttributes() {
 	printf("\nCurrent stats\n-----------------------\n");
 	printf("HP %3d/%3d        MP %3d/%3d", cur_hp, max_hp, cur_mp, max_mp);
     byte i;
-	for(i=0;i<6;i++) printf("%-11s %d\n",ATTNAMES[i].c_str(),attributes[i]);
+	for(i=0;i<6;i++) printf("%-11s %hhx\n",ATTNAMES[i].c_str(),attributes[i]);
 
 	//print skills
 	printf("\nEquipment    \n-----------------------\n");
