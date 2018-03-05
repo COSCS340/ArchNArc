@@ -113,11 +113,3 @@ class Entity {
 		int cur_mp;
 		void act(multiset<Entity>& inDungeon);
 };
-
-class Zone {
-	public:
-
-//	private:
-		vector<Entity> active_folks; //all characters in the zone
-		string description;
-};
