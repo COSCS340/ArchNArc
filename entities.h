@@ -49,7 +49,8 @@ class Skill {
 		//~Skill();
 		string name;
 		unsigned char maxlevel,currentlevel;
-		vector<pair<string,unsigned char> >* prereqs;
+		map<string, byte> prereqs;
+		//vector<pair<string,unsigned char> >* prereqs;
 		int effect_size; //for attack value, heal value, etc
 		int skill_type; //ie 1 for attack, 2 for heal, etc
 		int mp_cost;
@@ -79,7 +80,7 @@ class Entity {
 		Entity();
 		Entity(string);
 		Entity(int);
-		void setUpChar(byte j); //given name and job, initialize characters
+		void setUpChar(string, byte, byte); //given name and job, initialize characters
 		//static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
 		//static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
 		//static const string RACES[]={"human","chosen"};
@@ -94,30 +95,23 @@ class Entity {
 		bool operator< (Entity E);
 		int getCooldown() {return cooldown;}
 		int getGrace() {return grace;}
+		void save();
+		void load(ifstream);
 //	private:
 		string name;
 		Job job;
 		string species;
-        byte alignment;
+		byte alignment;
 		map<string, EquipItem> equipment; //mapped under type, ie "HAT", "TORSO", "WEAPON", etc.
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.
-		map<string, Skill> skills; //mapped under name of skill
 		int cash;
 		int level;
 		int cooldown;
 		int grace;
-		int *attributes;
+		byte *attributes;
 		int max_hp;
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
 		void act(multiset<Entity>& inDungeon);
-};
-
-class Zone {
-	public:
-
-//	private:
-		vector<Entity> active_folks; //all characters in the zone
-		string description;
 };

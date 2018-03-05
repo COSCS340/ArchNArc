@@ -148,13 +148,15 @@ Entity::Entity(string fileName) {
 
 typedef unsigned char byte;
 
-void Entity::setUpChar(byte r) {
+//a == race
+//r == class
+void Entity::setUpChar(string n, byte a, byte r) {
 	cash = 500; //or whatever we let them start with
 	level = 1;	
 	job.name = JOBS[r];
 
 	//why is attributes an array of ints, yet here is treated like an array of byes?
-	attributes = (int*)malloc(6);
+	attributes = malloc(6);
     memcpy(attributes,RACEATTS[r],6);
 
 }
@@ -178,7 +180,7 @@ void Entity::listAttributes() {
 	printf("\nCurrent stats\n-----------------------\n");
 	printf("HP %3d/%3d        MP %3d/%3d", cur_hp, max_hp, cur_mp, max_mp);
     byte i;
-	for(i=0;i<6;i++) printf("%-11s %d\n",ATTNAMES[i].c_str(),attributes[i]);
+	for(i=0;i<6;i++) printf("%-11s %hhx\n",ATTNAMES[i].c_str(),attributes[i]);
 
 	//print skills
 	printf("\nEquipment    \n-----------------------\n");
@@ -213,4 +215,94 @@ void Entity::act(multiset <Entity>& inDungeon) {
 
 bool Entity::operator< (Entity e){
 	return grace < e.getGrace();
+}
+
+void Entity::load(ifstream input) {
+
+}
+
+void Entity::save() {
+	ofstream output;
+	string filename;
+	int i;
+	map<string, Skill>::iterator a_it;
+	map<string, byte>::iterator b_it;
+	map<string, EquipItem>::iterator c_it;
+	map<string, UseItem>::iterator d_it;
+	map<string, int>::iterator e_it;
+
+	for(i = 0; name[i] != '\0'; i++) {
+		filename[i] = tolower(name[i]);
+	}
+	filename[i] = '\0';
+	filename = filename + ".txt";
+
+	output.open(filename.c_str(), out);
+
+	//first up, do basic player info
+	output << name << endl;
+	output << species << endl;
+
+	//I question whether this'll work. Oh well, can fix later
+	output << alignment << endl;
+
+	output << cash << endl;
+	output << level << endl;
+	output << cooldown << endl;
+	output << grace << endl;
+	output << max_hp << endl;
+	output << cur_hp << endl;
+	output << max_mp << endl;
+	output << cur_mp << endl;
+
+	for(i = 0; i < 6; i++) {
+		output << attributes[i] << endl;
+	}
+
+	//next, let's do the job data
+	output << job.name << endl;
+	output << job.skills.size() << endl;
+	for(a_it = job.skills.begin(); a_it != job.skills.end(); a_it++) {
+		output << a_it->second.name << endl;
+		output << a_it->second.maxlevel << endl;
+		output << a_it->second.currentlevel << endl;
+		output << a_it->second.effect_size << endl;
+		output << a_it->second.skill_type << endl;
+		output << a_it->second.mp_cost << endl;
+		output << a_it->second.accuracy << endl;
+		output << a_it->second.element << endl;
+		
+		output << a_it->second.prereqs.size() << endl;
+		for(b_it = a_it->second.prereqs.begin(); b_it != a_it->second.prereqs.end(); b_it++) {
+			output << b_it->first << endl;
+			output << b_it->second << endl;
+		}
+	}
+
+	//and now, for the two maps
+	output << equipment.size() << endl;
+	for(c_it = equipment.begin(); c_it != equipment.end(); c_it++) {
+		output << c_it->first << endl;
+		output << c_it->second.name << endl;
+		output << c_it->second.type << endl;
+		output << c_it->second.attack << endl;
+		output << c_it->second.defence << endl;
+
+		output << c_it->second.elemental.size() << endl;
+		for(e_it = c_it->second.elemental.begin(); e_it != c_it->second.elemental.end(); e_it++) {
+			output << e_it->first << endl;
+			output << e_it->second << endl;
+		}
+	}
+
+	output << useables.size() << endl;
+	for(d_it = useables.begin(); d_it != useables.end(); d_it++) {
+		output << d_it->first << endl;
+		output << d_it->second.name << endl;
+		output << d_it->second.type << endl;
+		output << d_it->second.how_many << endl;
+		output << d_it->second.effect_size << endl;
+	}
+
+	output.close();
 }

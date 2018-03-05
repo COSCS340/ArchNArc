@@ -1,3 +1,13 @@
+/* 	We had talked about using the fields library and Ron was working on 
+		porting it over here, so I'll set this up using that.
+		string command;
+	
+		//Hey, Michaela here. This would be easier with strstr(), if you
+		//wanted to simplify searching strings. It'd just need to be with
+		//c_strings instead
+		
+		Ron - began implementing the use of vectors that containing valid synonyms for each action
+*/
 #include <iostream>
 #include <cstdio>
 #include <string>
@@ -7,26 +17,24 @@
 #include "fields.h"
 using namespace std;
 
-/* 
-commands to be supported (working list)
-    use = {drink, eat, use}
-    check = {open, look}
-    try
-    move = {walk, go}
-    attack = {hit, bash, slash, ... }
-*/
-
-const int MOVE = 0;
-const int ATTACK = 1;
-const int CHECK = 2;
-const int SKILL = 3;
+const int USE = 0;
+const int MOVE = 1;
+const int ATTACK = 2;
+const int CHECK = 3;
 const int TAKE = 4;
-const int TALK = 5;
-const int MAP = 6;
+const int HELP = 5;
+const int SKILL = 6;
+const int TALK = 7;
+const int MAP = 8;
+
+const vector<string> use_vec = {"use", "drink", "eat", "consume"};
+const vector<string> move_vec = {"go", "walk", "run", "move"};
+const vector<string> attack_vec = {"attack", "hit"};
+const vector<string> check_vec = {"check", "scan", "look", "examine"};
+const vector<string> take_vec = {"take", "pickup", "grab", "snatch"};
 
 int action();
 int synonyms(char*);
-//void synonyms(char*);
 void actionUse(IS);
 void actionCheck(IS);
 void actionTry(IS);
@@ -42,17 +50,7 @@ int main () {
 }
 
 int action () {
-	/* 	We had talked about using the fields library and Ron was working on 
-		porting it over here, so I'll set this up using that.
-		string command;
 	
-		//Hey, Michaela here. This would be easier with strstr(), if you
-		//wanted to simplify searching strings. It'd just need to be with
-		//c_strings instead.
-		
-		Ron - thinking about implementing the synonyms function using a vector
-		for each action that contain valid synonyms
-	*/
 	int selection;
 	
 	//open inputstruct for reading stdin
@@ -69,25 +67,29 @@ int action () {
 	
 	//check for action word synonyms
 	selections = synonyms(is->fields[0]);
-/*	
-	//call action function
-	if (is->fields[0] == "try")
-		actionTry(is);
-	else if (is->fields[0] == "check")
-		actionCheck(is);
-	else if (is->fields[0] == "help")
-		actionHelp();
-	else if (is->fields[0] == "use")
-		actionUse(is);
-	else
-		badInput();
-*/
+
+	//call function for given action
 	switch(selection){
 		case MOVE:
-			
+			actionMove(is);
+			break;
+		case USE:
+		   	actionUse(is);
+		   	break;	
 		case ATTACK:
-		
+		    	actionAttack(is);
+		    	break;
+		case CHECK:
+		    	actionCheck(is);
+		    	break;
+		case TAKE:
+		    	actionTake(is);
+		    	break;
+		case HELP:
+			actionHelp();
+			break;
 		default:
+		    	badinput();
 	}
 	
 	//free memory and return
@@ -95,15 +97,18 @@ int action () {
 	return 1;
 }
 
+//move character 
+void actionMove(IS is) {
+	return;
+}
+
 //use an item
 void actionUse(IS is) {
-	string item;
-	if (is->NF < 2){
-		cout << "Invalid input: no specified item to use.\n";
-		return;
-	}else{
-		//use item
-	}
+	return;
+}
+
+//attack designated target
+void actionAttack(IS is) {
 	return;
 }
 
@@ -112,70 +117,53 @@ void actionCheck(IS is) {
 	return;
 }
 
-//preview results of performing action
-void actionTry(IS is) {
+//pickup/take item
+void actionTake(IS is) {
 	return;
 }
 
 //input assistance
 void actionHelp() {
 	std::cout << "Try using an item, skill or spell." << endl
-		 << "You can check on the status of enemies and allies or list skills and spells." << endl;
-		 << "If you want to know what something will do, try an action." << endl;
+		  << "You can check on the status of enemies and allies or list skills and spells." << endl;
+		  << "If you want to know what something will do, try an action." << endl;
+	return;
 }
 
 //incorrect input 
 void badInput() {
 	cout << "Invalid input. Type 'help' for help." << endl;
+	return;
 }
 
-//just trying out something new. If it don't work out, we'll go back to yours
-//I do believe we're planning on doing vectors of synonyms. In that case, my
-//basic idea stands that it'd be simpler to use constants and return the result,
-//we'd just need to loop through the vector for comparisons. IE	
-//	for(int i = 0; i < move_vec.size(); i++) {	
-//		if(strcmp(b, move_vec[i]) == 0) return(MOVE);	
-//	}	
-int synonyms(char* b) {	
-	if(strcmp(b, "go") == 0 || strcmp(b, "walk") == 0 || strcmp(b, "move") == 0) {	
-		return(MOVE);	
-	}	
-		
-	if(strcmp(b, "attack") == 0 || strcmp(b, "hit") == 0 || strcmp(b, "bash") == 0) {	
-		return(ATTACK);	
-	}	
-		
-	if(strcmp(b, "check") == 0 || strcmp(b, "scan") == 0 || strcmp(b, "examine") == 0) {	
-		return(CHECK);	
-	}	
+//gets command based on synonyms
+int synonyms(char* b) {
 	
-	if(strcmp(b, "take") == 0 || strcmp(b, "grab") == 0 || strcmp(b, "snatch") == 0) {	
-		return(TAKE);	
-	}	
+	for(i = 0; i < use_vec.size(); i++) {
+		if(strcmp(b,use_vec[i] == 0)
+			return(USE);
+	}
+		   
+	for(i = 0; i < move_vec.size(); i++) {
+		if(strcmp(b,move_vec[i] == 0)
+		   	return(MOVE);	
+	}
+		   
+	for(i = 0; i < attack_vec.size(); i++) {
+		if(strcmp(b,attack_vec[i] == 0)	
+		   	return(ATTACK);	
+	}
+		   
+	for(i = 0; i < check_vec.size(); i++) {
+		if(strcmp(b,check_vec[i] == 0)
+		   	return(CHECK);
+	}
+		   
+	for(i = 0; i < take_vec.size(); i++) {
+		if(strcmp(b,take_vec[i] == 0)
+		   	return(TAKE);	
+	}
+	
+	if(strcmp(b,"help") == 0)
+		return(HELP);
 }
-
-/*
-void synonyms(char* action) {
-	if (action == "use")
-		return;
-	else if (action == "try")
-		return;
-	else if (action == "check")
-		return;
-	else if (action == "help")
-		return;
-	else if (action == "eat"){
-		action = "use"
-		return;
-	}
-	else if (action == "drink"){
-		b = "use";
-		return;
-	}
-	else if (action == "cast"){
-		b = "use";
-		return;
-	}
-	else if (
-}
-*/
