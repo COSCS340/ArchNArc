@@ -28,8 +28,10 @@ int main(int argc,char** args) {
 	int place = 0;
 	char ans;
 	string name;
+	string fileName;
 	string temp;
-	byte class;
+	byte classNum;
+	ifstream input;
 	for (int i = 0; i < 7; i++)
 		party[i] = NULL;
 	while (true) {
@@ -55,14 +57,16 @@ int main(int argc,char** args) {
 			while(true) {
 				printf(" >> ");
 				getline(std::cin, temp);
-				for (class = 0; class < 6; class++)
-					if (temp == JOBS[class])
+				for (classNum = 0; classNum < 6; classNum++)
+					if (temp == JOBS[classNum])
 						break;
 				if (class == 6){ //bad input
 					printf("I don't recognize that. Please try again.\n");
 				}
 			}
-			party[place]->setUpChar(name, (byte) 0, class);
+			party[place]->setUpChar(name, (byte) 0, classNum);
+			place++;
+			continue;
 		}
 		while (true) {
 			printf ("Would you like to load a character?(y/n)");
@@ -73,11 +77,28 @@ int main(int argc,char** args) {
 			printf("Error, incorrect input. Try Again.");
 		}
 		if (ans == 'y'){
-			printf("Enter your character's name: ");
-			getline(cin, name);
-			
+			party[place] = new Entity;
+			while (true){
+				fileName = "";
+				printf("Enter your character's name: ");
+				getline(cin, name);
+				for (int i = 0; i < name.size(); i++)
+					if (name[i] != ' ')
+						fileName += tolower(name[i]);
+				fileName += ".txt";
+				input.open(fileName.c_str(), in);
+				if (input.fail())
+					printf("Bad file. Try again.");
+				else 
+					break;
+			}
+			party[place]->load(input);
+			place++;
 		}
+		if (ans == 'n' || place == 7)
+			break;
 	}
+	
 	jettison_inputstruct(in);
 	if(spid) wait(&i);
 }
