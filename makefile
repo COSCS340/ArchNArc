@@ -23,11 +23,14 @@ fields.o:
 entities.o:
 	$(CC) $(CFLAGS) -c entities.cpp
 
+zone.o:
+	$(CC) $(CFLAGS) -c zone.cpp
+
 #handler.o:
 #	$(CC) $(CFLAGS) -c handler.cpp
 
-master: main.o fields.o entities.o
-	$(CC) -o master main.o fields.o entities.o
+master: main.o fields.o entities.o zone.o
+	$(CC) -o master main.o fields.o entities.o zone.o
 
 #master: main.o fields.o entities.o handler.o
 #	$(CC) -o master main.o fields.o entities.o handler.o
