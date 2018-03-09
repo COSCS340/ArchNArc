@@ -17,7 +17,6 @@ byte cterm();
 int spid; // PID of the server, only set to non-zero if this is the client that launched the server
 
 int main(int argc,char** args) {
-	spid=0;
 	IS in = new_inputstruct(NULL);
 	printf("Welcome to Archery & Arcana, player.\n");
 	if(cinit()) return 1;
@@ -100,7 +99,6 @@ int main(int argc,char** args) {
 	}
 	
 	jettison_inputstruct(in);
-	if(spid) wait(&i);
 }
 
 byte cinit() {

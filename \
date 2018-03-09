@@ -10,7 +10,7 @@ public:
     int nsEnt(Entity* e); // I[ns]ert [Ent]ity
     int rmEnt(Entity* e); // [r]e[m]ove [Ent]ity
     int tick();
-};
+}
 
 int Zone::empty() {
     return mpop-pop;
@@ -31,9 +31,9 @@ int Zone::nsEnt(Entity* e) {
     return 0;
 }
 
-int Zone::rmEnt(Entity* e) {
+int Zone::rmEnt(Enity* e) {
     if(empty()) {
-        fprintf(stderr,"zone: empty, cannot remove entity\n");
+        fprinf(stderr,"zone: empty, cannot remove entity\n");
         return -1;
     }
     int i=0;
