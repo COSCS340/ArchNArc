@@ -29,15 +29,17 @@ int main(int argc,char** args) {
 	string name;
 	string fileName;
 	string temp;
+	string junk;
 	byte classNum;
 	ifstream input;
+	int flag;
 	for (int i = 0; i < 7; i++)
 		party[i] = NULL;
 	while (true) {
 		while (true){
 			printf("Would you like to create a new character?(y/n)");
-			cin >> ans;
-			ans = tolower(ans);
+			getline(cin, junk);
+			ans = tolower(junk[0]);
 			if (ans == 'y' || ans == 'n')
 				break;
 			printf("Error, incorrect input. Try Again.");
@@ -45,7 +47,7 @@ int main(int argc,char** args) {
 		if (ans == 'y'){
 			party[place] = new Entity;
 			printf ("Enter the character's name: ");
-			cin >> name;
+			getline(cin, name);
 			printf("What class would you like to be? Please choose one of the following.\n");
 			printf(" ----------------------------\n");
 			for(int i = 0; i < NUM_JOBS; i++) {
@@ -54,23 +56,43 @@ int main(int argc,char** args) {
 			}
 			printf(" ----------------------------\n");
 			while(true) {
+				flag = 1;
 				printf(" >> ");
-				getline(std::cin, temp);
-				for (classNum = 0; classNum < 6; classNum++)
-					if (temp == JOBS[classNum])
+				getline(cin, temp);
+				if(temp[0] >= '1' && temp[0] <= '6') { //note: change second item to however many classes we end up having
+					temp[1] = '\0';
+					classNum = atoi(temp.c_str()) - 1;
+					break;
+				} else {
+					for(int i = 0; temp[i] != '\0'; i++) {
+						temp[i] = tolower(temp[i]);
+					}
+					for (classNum = 0; classNum < 6; classNum++) {
+						if (temp == JOBS[classNum]) {
+							flag = 0;
+							break;
+						}
+					}
+					if(flag == 0) {
 						break;
-				if (classNum == 6){ //bad input
-					printf("I don't recognize that. Please try again.\n");
+					}
+					if (classNum == 6){ //bad input
+						printf("I don't recognize that. Please try again.\n");
+					}
 				}
 			}
 			party[place]->setUpChar(name, (byte) 0, classNum);
+			party[place]->listAttributes();
 			place++;
+			if(place > 6){
+				break;
+			}
 			continue;
 		}
 		while (true) {
 			printf ("Would you like to load a character?(y/n)");
-			cin >> ans;
-			ans = tolower(ans);
+			getline(cin, junk);
+			ans = tolower(junk[0]);
 			if (ans == 'y' || ans == 'n')
 				break;
 			printf("Error, incorrect input. Try Again.");
@@ -82,8 +104,11 @@ int main(int argc,char** args) {
 				printf("Enter your character's name: ");
 				getline(cin, name);
 				for (int i = 0; i < name.size(); i++)
-					if (name[i] != ' ')
+					if (name[i] != ' ') {
 						fileName += tolower(name[i]);
+					} else {
+						fileName += '_';
+					}
 				fileName += ".txt";
 				input.open(fileName.c_str());
 				if (input.fail())
@@ -94,7 +119,7 @@ int main(int argc,char** args) {
 			party[place]->load(input);
 			place++;
 		}
-		if (ans == 'n' || place == 7)
+		if (ans == 'n' || place > 6)
 			break;
 	}
 	

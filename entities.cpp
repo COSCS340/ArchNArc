@@ -20,6 +20,7 @@
 //
 //void Entity::loadGame() {
 Entity::Entity () {
+	return;
 	string temp;
 	printf("Enter your characters name: ");
 	getline(std::cin, temp);
@@ -152,12 +153,22 @@ typedef unsigned char byte;
 //r == class
 void Entity::setUpChar(string n, byte a, byte r) {
 	cash = 500; //or whatever we let them start with
-	level = 1;	
+	level = 1;
+	name = n;
 	job.name = JOBS[r];
 
 	//why is attributes an array of ints, yet here is treated like an array of byes?
+	
 	attributes = (byte*)malloc(6);
-    memcpy(attributes,RACEATTS[r],6);
+	max_hp = cur_hp = 20;
+	max_mp = cur_mp = 10;
+	attributes[0] = 10;
+	attributes[1] = 10;
+	attributes[2] = 10;
+	attributes[3] = 10;
+	attributes[4] = 10;
+	attributes[5] = 10;
+    //memcpy(attributes,RACEATTS[r],6);
 
 }
 
@@ -174,13 +185,14 @@ void Entity::listAttributes() {
 	map<string, UseItem>::iterator u_it;
 	map<string, Skill>::iterator s_it;
 
-	printf("\n%30sGold: %d\n", name.c_str(), cash);
+	printf("\n%-30sGold: %d\n", name.c_str(), cash);
 	printf("Species: %s\n", species.c_str());
 	printf("Class: %s\n\n", job.name.c_str());
 	printf("\nCurrent stats\n-----------------------\n");
-	printf("HP %3d/%3d        MP %3d/%3d", cur_hp, max_hp, cur_mp, max_mp);
+	printf("HP %3d/%d     MP %3d/%d\n\n", cur_hp, max_hp, cur_mp, max_mp);
     byte i;
-	for(i=0;i<6;i++) printf("%-11s %hhx\n",ATTNAMES[i].c_str(),attributes[i]);
+	//for(i=0;i<6;i++) printf("%-15s %hhx\n",ATTNAMES[i].c_str(),attributes[i]);
+	for(i=0;i<6;i++) printf("%-15s %d\n",ATTNAMES[i].c_str(),(int)attributes[i]);
 
 	//print skills
 	printf("\nEquipment    \n-----------------------\n");
