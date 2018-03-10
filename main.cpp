@@ -23,7 +23,7 @@ int main(int argc,char** args) {
 	if(crun()) return 1;
 	if(cterm()) return 1;
 
-	Entity*[7] party;
+	Entity* party[7];
 	int place = 0;
 	char ans;
 	string name;
@@ -59,7 +59,7 @@ int main(int argc,char** args) {
 				for (classNum = 0; classNum < 6; classNum++)
 					if (temp == JOBS[classNum])
 						break;
-				if (class == 6){ //bad input
+				if (classNum == 6){ //bad input
 					printf("I don't recognize that. Please try again.\n");
 				}
 			}
@@ -85,7 +85,7 @@ int main(int argc,char** args) {
 					if (name[i] != ' ')
 						fileName += tolower(name[i]);
 				fileName += ".txt";
-				input.open(fileName.c_str(), in);
+				input.open(fileName.c_str());
 				if (input.fail())
 					printf("Bad file. Try again.");
 				else 

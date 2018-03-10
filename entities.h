@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <cstring>
 //#include "job.h"
 
@@ -96,7 +97,7 @@ class Entity {
 		int getCooldown() {return cooldown;}
 		int getGrace() {return grace;}
 		void save();
-		void load(ifstream);
+		void load(ifstream&);
 //	private:
 		string name;
 		Job job;

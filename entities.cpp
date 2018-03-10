@@ -156,7 +156,7 @@ void Entity::setUpChar(string n, byte a, byte r) {
 	job.name = JOBS[r];
 
 	//why is attributes an array of ints, yet here is treated like an array of byes?
-	attributes = malloc(6);
+	attributes = (byte*)malloc(6);
     memcpy(attributes,RACEATTS[r],6);
 
 }
@@ -194,7 +194,7 @@ void Entity::listAttributes() {
 	}
 
 	printf("\nSkills       \n-----------------------\n");
-	for(s_it = skills.begin(); s_it != skills.end(); s_it++) {
+	for(s_it = job.skills.begin(); s_it != job.skills.end(); s_it++) {
 		printf("%15s\n", s_it->first.c_str());
 	}
 	printf("\n");
@@ -217,7 +217,7 @@ bool Entity::operator< (Entity e){
 	return grace < e.getGrace();
 }
 
-void Entity::load(ifstream input) {
+void Entity::load(ifstream& input) {
 
 }
 
@@ -237,7 +237,7 @@ void Entity::save() {
 	filename[i] = '\0';
 	filename = filename + ".txt";
 
-	output.open(filename.c_str(), out);
+	output.open(filename.c_str());
 
 	//first up, do basic player info
 	output << name << endl;
