@@ -1,5 +1,6 @@
-/*
- *
+/* File: entities.cpp
+ * Author: collective effort of Team Archery and Arcana
+ * Regrets: none
  */
 #include <iostream>
 #include <set>
@@ -10,9 +11,9 @@
 #include "entities.h"
 #include "fields.h"
 
-const string pos_names[] = {"Manaliabrid", "Osfameron", "Deryn", "Brutha", "Anevka", "Enoch", "Sandrilene", "Theophrastus", "Hazel", "Kevin", "Gladys", "Anatolio", "Lyseria", "Bob", "Azula", "Krauss", "Amakusa", "Rudolph", "Janus", "Keichi"};
+const string pos_names[] = {"Manaliabrid", "Osfameron", "Deryn", "Brutha", "Anevka", "Enoch", "Sandrilene", "Theophrastus", "Hazel", "Kevin", "Gladys", "Anatolio", "Lyseria", "Bob", "Azula", "Krauss", "Amakusa", "Rudolph", "Adara", "Janus", "Aeronwen", "Keichi", "Branwen", "Alwyn", "Dwynwen", "Cadfael", "Hywela", "Emlyn", "Maelona", "Gwalchgwyn", "Nerys", "Idris", "Sioned", "Llywellyn", "Yseult"};
 const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader", " the Incompetent", " the Flautist", " the Sleep-Deprived", " the Tennessean", " the Overlord", " the Hatter", " the Sunseeker", " the Fluffy", " the Timejumper", " the Darwinist"};
-const int NUM_NAMES = 20;
+const int NUM_NAMES = 34;
 const int NUM_TITLES = 13;
 
 //I feel this might work better as a function than a contructor. What do
@@ -24,6 +25,8 @@ const int NUM_TITLES = 13;
 //
 //void Entity::loadGame() {
 Entity::Entity () {
+	//have now changed it to do all the stuff in main, then call setUpChar();
+	//may change/reorganize later.
 	return;
 	string temp;
 	printf("Enter your characters name: ");

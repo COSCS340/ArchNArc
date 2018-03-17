@@ -1,6 +1,7 @@
 /*
  *
  */
+#include <unistd.h>
 #include <vector>
 #include <string>
 #include <map>
@@ -17,6 +18,12 @@ using namespace std;
 typedef unsigned char byte;
 
 const int NUM_JOBS = 6;
+static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
+static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
+static const string RACES[]={"human","chosen"};
+static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
+static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid"}; //note: some names not final
+
 
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
 //IF WE WANT GOOD CODING PRACTICE, IT CAN BE TWEAKED LATER, BUT FOR NOW,
@@ -65,16 +72,6 @@ class Job {
 		map<string, Skill> skills;
 		unsigned char addSkillPoint(string);
 };
-
-
-//moved these outside the class, as g++ was getting bitchy about it. Not sure if
-//it's something that CAN'T be done in c++ or if we just did it wrong.
-//Either way, it works like this, so I'm leaving it for now. -MDS
-static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
-static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
-static const string RACES[]={"human","chosen"};
-static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
-static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid"}; //note: some names not final
 
 class Entity {
 	public:
