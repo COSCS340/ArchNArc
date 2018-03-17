@@ -7,6 +7,7 @@
 #include <set>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -82,6 +83,7 @@ class Entity {
 		Entity(string);
 		Entity(int);
 		void setUpChar(string, byte, byte); //given name and job, initialize characters
+		void generateChar();
 		//static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
 		//static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
 		//static const string RACES[]={"human","chosen"};

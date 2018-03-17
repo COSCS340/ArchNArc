@@ -33,11 +33,14 @@ int main(int argc,char** args) {
 	byte classNum;
 	ifstream input;
 	int flag;
+
+	srand(time(NULL));
+
 	for (int i = 0; i < 7; i++)
 		party[i] = NULL;
 	while (true) {
 		while (true){
-			printf("Would you like to create a new character?(y/n)");
+			printf("Would you like to create a new character?(y/n) ");
 			getline(cin, junk);
 			ans = tolower(junk[0]);
 			if (ans == 'y' || ans == 'n')
@@ -90,7 +93,7 @@ int main(int argc,char** args) {
 			continue;
 		}
 		while (true) {
-			printf ("Would you like to load a character?(y/n)");
+			printf ("Would you like to load a character?(y/n) ");
 			getline(cin, junk);
 			ans = tolower(junk[0]);
 			if (ans == 'y' || ans == 'n')
@@ -118,8 +121,13 @@ int main(int argc,char** args) {
 			}
 			party[place]->load(input);
 			place++;
+		} else {
+			printf("Then let's generate a character for you.\n");
+			party[place] = new Entity;
+			party[place]->generateChar();
+			place++;
 		}
-		if (ans == 'n' || place > 6)
+		if (place > 6)
 			break;
 	}
 	

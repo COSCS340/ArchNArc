@@ -10,6 +10,10 @@
 #include "entities.h"
 #include "fields.h"
 
+const string pos_names[] = {"Manaliabrid", "Osfameron", "Deryn", "Brutha", "Anevka", "Enoch", "Sandrilene", "Theophrastus", "Hazel", "Kevin", "Gladys", "Anatolio", "Lyseria", "Bob", "Azula", "Krauss", "Amakusa", "Rudolph", "Janus", "Keichi"};
+const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader", " the Incompetent", " the Flautist", " the Sleep-Deprived", " the Tennessean", " the Overlord", " the Hatter", " the Sunseeker", " the Fluffy", " the Timejumper", " the Darwinist"};
+const int NUM_NAMES = 20;
+const int NUM_TITLES = 13;
 
 //I feel this might work better as a function than a contructor. What do
 //y'all think? Maybe something like
@@ -149,16 +153,14 @@ Entity::Entity(string fileName) {
 
 typedef unsigned char byte;
 
-//a == race
-//r == class
-void Entity::setUpChar(string n, byte a, byte r) {
+//r == race
+//c == class
+void Entity::setUpChar(string n, byte r, byte c) {
 	cash = 500; //or whatever we let them start with
 	level = 1;
 	name = n;
-	job.name = JOBS[r];
+	job.name = JOBS[c];
 
-	//why is attributes an array of ints, yet here is treated like an array of byes?
-	
 	attributes = (byte*)malloc(6);
 	max_hp = cur_hp = 20;
 	max_mp = cur_mp = 10;
@@ -170,6 +172,37 @@ void Entity::setUpChar(string n, byte a, byte r) {
 	attributes[5] = 10;
     //memcpy(attributes,RACEATTS[r],6);
 
+}
+
+void Entity::generateChar() {
+	int temp1, temp2;
+
+	cash = 500;
+	level = 1;
+
+	temp1 = rand() % NUM_NAMES;
+	temp2 = rand() % NUM_TITLES;
+
+	name = pos_names[temp1] + pos_titles[temp2];
+	printf("Your adventurer's name is %s.\n", name.c_str());
+
+	//may wanna make it only select from jobs not already in the party. 
+	//Especially if we get a good few more than 7 jobs.
+	temp1 = rand() % NUM_JOBS;
+	job.name = JOBS[temp1];
+	printf("And their class is %s.\n", job.name.c_str());
+	printf("So please don't get them killed.\n");
+
+	attributes = (byte*)malloc(6);
+	max_hp = cur_hp = 20;
+	max_mp = cur_mp = 10;
+	attributes[0] = 10;
+	attributes[1] = 10;
+	attributes[2] = 10;
+	attributes[3] = 10;
+	attributes[4] = 10;
+	attributes[5] = 10;
+	//memcpy(attributes,RACEATTS[r],6);
 }
 
 void Entity::addEquipment(EquipItem a) {
