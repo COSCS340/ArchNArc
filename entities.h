@@ -11,7 +11,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-//#include "job.h"
 
 using namespace std;
 
@@ -84,11 +83,6 @@ class Entity {
 		Entity(int);
 		void setUpChar(string, byte, byte); //given name and job, initialize characters
 		void generateChar();
-		//static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
-		//static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
-		//static const string RACES[]={"human","chosen"};
-		//static const byte RACEATTS[][] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
-		//static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid"}; //note: some names not final
 
 		void setUpChar(string n, byte r); //given name and race, initialize character
 		void addEquipment(EquipItem);

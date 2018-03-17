@@ -1,3 +1,4 @@
+// DEPRECATED
 #include <string>
 #include <cstdio>
 #include <cstring>
