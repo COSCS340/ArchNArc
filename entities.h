@@ -19,7 +19,7 @@ typedef unsigned char byte;
 
 const int NUM_JOBS = 6;
 static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
-static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
+static const string ATTNAMES[]={"Serendipity","Might","Intelligence","Grace","Heart","Tenacity"};
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
 static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid"}; //note: some names not final
@@ -53,6 +53,7 @@ class UseItem {
 
 class Skill {
 	public:
+		Skill();
 		Skill(int);
 		//~Skill();
 		string name;

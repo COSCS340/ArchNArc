@@ -125,6 +125,9 @@ int main(int argc,char** args) {
 			printf("Then let's generate a character for you.\n");
 			party[place] = new Entity;
 			party[place]->generateChar();
+			party[place]->listAttributes();
+			//delete later
+			party[place]->save();
 			place++;
 		}
 		if (place > 6)

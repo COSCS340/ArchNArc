@@ -16,6 +16,10 @@ const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader",
 const int NUM_NAMES = 34;
 const int NUM_TITLES = 48;
 
+Skill::Skill() {
+
+}
+
 //I feel this might work better as a function than a contructor. What do
 //y'all think? Maybe something like
 //
@@ -164,6 +168,9 @@ void Entity::setUpChar(string n, byte r, byte c) {
 	name = n;
 	job.name = JOBS[c];
 
+	//if we end up doing alternate races, fix it here
+	species = "Human";
+
 	attributes = (byte*)malloc(6);
 	max_hp = cur_hp = 20;
 	max_mp = cur_mp = 10;
@@ -175,10 +182,43 @@ void Entity::setUpChar(string n, byte r, byte c) {
 	attributes[5] = 10;
     //memcpy(attributes,RACEATTS[r],6);
 
+	if(job.name == "fightard" || job.name == "anime kid") { //medium armor
+		equipment["Weapon"].name = "Dagger";
+		equipment["Weapon"].type = "edged weapon";
+		equipment["Weapon"].attack = 3;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Leather Tunic";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 2;
+	} else if(job.name == "clay warrior") { //heavy armor
+		equipment["Weapon"].name = "Oak Club";
+		equipment["Weapon"].type = "blunt weapon";
+		equipment["Weapon"].attack = 1;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Wooden Breastplate";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 4;
+	} else { //light armor
+		equipment["Weapon"].name = "Small Pamphlet";
+		equipment["Weapon"].type = "magic paper";
+		equipment["Weapon"].attack = 4;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Airy Robe";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 1;
+	}
+
+	useables["potion"].name = "Small potion";
+	useables["potion"].type = "healing";
+	useables["potion"].how_many = 3;
+	useables["potion"].effect_size = 4;
 }
 
 void Entity::generateChar() {
-	int temp1, temp2;
+	byte temp1, temp2;
 
 	cash = 500;
 	level = 1;
@@ -196,16 +236,7 @@ void Entity::generateChar() {
 	printf("And their class is %s.\n", job.name.c_str());
 	printf("So please don't get them killed.\n");
 
-	attributes = (byte*)malloc(6);
-	max_hp = cur_hp = 20;
-	max_mp = cur_mp = 10;
-	attributes[0] = 10;
-	attributes[1] = 10;
-	attributes[2] = 10;
-	attributes[3] = 10;
-	attributes[4] = 10;
-	attributes[5] = 10;
-	//memcpy(attributes,RACEATTS[r],6);
+	setUpChar(name, 0, temp1);
 }
 
 void Entity::addEquipment(EquipItem a) {
@@ -231,19 +262,19 @@ void Entity::listAttributes() {
 	for(i=0;i<6;i++) printf("%-15s %d\n",ATTNAMES[i].c_str(),(int)attributes[i]);
 
 	//print skills
-	printf("\nEquipment    \n-----------------------\n");
+	printf("\nEquipment    \n-------------------------------\n");
 	for(e_it = equipment.begin(); e_it != equipment.end(); e_it++) {
-		printf("%15s %s\n", e_it->first.c_str(), e_it->second.name.c_str());
+		printf("%-15s %s\n", e_it->first.c_str(), e_it->second.name.c_str());
 	}
 
-	printf("\nSupplies     \n-----------------------\n");
+	printf("\nSupplies     \n-------------------------------\n");
 	for(u_it = useables.begin(); u_it != useables.end(); u_it++) {
-		printf("%15s %d\n", u_it->first.c_str(), u_it->second.how_many);
+		printf("%-15s %13d\n", u_it->second.name.c_str(), u_it->second.how_many);
 	}
 
-	printf("\nSkills       \n-----------------------\n");
+	printf("\nSkills       \n-------------------------------\n");
 	for(s_it = job.skills.begin(); s_it != job.skills.end(); s_it++) {
-		printf("%15s\n", s_it->first.c_str());
+		printf("%-15s\n", s_it->first.c_str());
 	}
 	printf("\n");
 }
@@ -266,12 +297,103 @@ bool Entity::operator< (Entity e){
 }
 
 void Entity::load(ifstream& input) {
+	int i, j;
+	string junk, t_str, argh;
+	int temp1, temp2;
 
+	//basic character info reading
+	getline(input, name);
+	getline(input, species);
+	
+	input >> cash;
+	getline(input, junk);
+	input >> level;
+	getline(input, junk);
+	input >> cooldown;
+	getline(input, junk);
+	input >> grace;
+	getline(input, junk);
+	input >> max_hp;
+	getline(input, junk);
+	input >> cur_hp;
+	getline(input, junk);
+	input >> max_mp;
+	getline(input, junk);
+	input >> cur_mp;
+	getline(input, junk);
+	
+	for(i = 0; i < 6; i++) {
+		input >> attributes[i];
+		getline(input, junk);
+	}
+
+	//freaking job time
+	getline(input, job.name);
+	input >> temp1;
+	getline(input, junk);
+	for(i = 0; i < temp1; i++) {
+		getline(input, t_str);
+		job.skills[t_str].name = t_str;
+		input >> job.skills[t_str].maxlevel;
+		getline(input, junk);
+		input >> job.skills[t_str].currentlevel;
+		getline(input, junk);
+		input >> job.skills[t_str].effect_size;
+		getline(input, junk);
+		input >> job.skills[t_str].skill_type;
+		getline(input, junk);
+		input >> job.skills[t_str].mp_cost;
+		getline(input, junk);
+		input >> job.skills[t_str].accuracy;
+		getline(input, junk);
+		getline(input, job.skills[t_str].element);
+
+		input >> temp2;
+		for(j = 0; j < temp2; j++) {
+			getline(input, argh);
+			input >> job.skills[t_str].prereqs[argh];
+			getline(input, junk);
+		}
+	}
+
+	//equipment time
+	input >> temp1;
+	getline(input, junk);
+	for(i = 0; i < temp1; i++) {
+		getline(input, t_str);
+		getline(input, equipment[t_str].name);
+		getline(input, equipment[t_str].type);
+		input >> equipment[t_str].attack;
+		getline(input, junk);
+		input >> equipment[t_str].defence;
+		getline(input, junk);
+
+		input >> temp2;
+		getline(input, junk);
+		for(j = 0; j < temp2; j++) {
+			getline(input, argh);
+			input >> equipment[t_str].elemental[argh];
+			getline(input, junk);
+		}
+	}
+
+	//and. now. for. the. useables. FINALLY.
+	input >> temp1;
+	getline(input, junk);
+	for(i = 0; i < temp1; i++) {
+		getline(input, t_str);
+		getline(input, useables[t_str].name);
+		getline(input, useables[t_str].type);
+		input >> useables[t_str].how_many;
+		getline(input, junk);
+		input >> useables[t_str].effect_size;
+		getline(input, junk);
+	}
 }
 
 void Entity::save() {
 	ofstream output;
-	string filename;
+	string filename, temp;
 	int i;
 	map<string, Skill>::iterator a_it;
 	map<string, byte>::iterator b_it;
@@ -279,11 +401,26 @@ void Entity::save() {
 	map<string, UseItem>::iterator d_it;
 	map<string, int>::iterator e_it;
 
+	printf("name: %s\n", name.c_str());
+
 	for(i = 0; name[i] != '\0'; i++) {
-		filename[i] = tolower(name[i]);
+		if(name[i] == ' ') {
+			filename[i] = '_';
+		} else {
+			filename[i] = tolower(name[i]);
+		}
 	}
+
 	filename[i] = '\0';
-	filename = filename + ".txt";
+	printf("%s\n", filename.c_str());
+	//temp = filename;
+	//filename = temp + ".txt";
+	filename[i] = '.';
+	filename[i+1] = 't';
+	filename[i+2] = 'x';
+	filename[i+3] = 't';
+
+	printf("%s\n", filename.c_str());
 
 	output.open(filename.c_str());
 
@@ -292,7 +429,7 @@ void Entity::save() {
 	output << species << endl;
 
 	//I question whether this'll work. Oh well, can fix later
-	output << alignment << endl;
+	//output << alignment << endl;
 
 	output << cash << endl;
 	output << level << endl;
@@ -304,7 +441,7 @@ void Entity::save() {
 	output << cur_mp << endl;
 
 	for(i = 0; i < 6; i++) {
-		output << attributes[i] << endl;
+		output << (int)attributes[i] << endl;
 	}
 
 	//next, let's do the job data
