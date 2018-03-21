@@ -322,9 +322,13 @@ void Entity::load(ifstream& input) {
 	input >> cur_mp;
 	getline(input, junk);
 	
+	attributes = (byte*)malloc(6);
+
 	for(i = 0; i < 6; i++) {
-		input >> attributes[i];
-		getline(input, junk);
+		getline(input, t_str);
+		attributes[i] = (byte) (atoi(t_str.c_str()));
+		//input >> attributes[i];
+		//getline(input, junk);
 	}
 
 	//freaking job time
@@ -389,6 +393,8 @@ void Entity::load(ifstream& input) {
 		input >> useables[t_str].effect_size;
 		getline(input, junk);
 	}
+
+	listAttributes();
 }
 
 void Entity::save() {
@@ -401,7 +407,7 @@ void Entity::save() {
 	map<string, UseItem>::iterator d_it;
 	map<string, int>::iterator e_it;
 
-	printf("name: %s\n", name.c_str());
+	//printf("name: %s\n", name.c_str());
 
 	for(i = 0; name[i] != '\0'; i++) {
 		if(name[i] == ' ') {
@@ -412,15 +418,14 @@ void Entity::save() {
 	}
 
 	filename[i] = '\0';
-	printf("%s\n", filename.c_str());
-	//temp = filename;
-	//filename = temp + ".txt";
+	//printf("%s\n", filename.c_str());
 	filename[i] = '.';
 	filename[i+1] = 't';
 	filename[i+2] = 'x';
 	filename[i+3] = 't';
+	filename[i+4] = '\0';
 
-	printf("%s\n", filename.c_str());
+	//printf("%s\n", filename.c_str());
 
 	output.open(filename.c_str());
 
