@@ -17,12 +17,12 @@ using namespace std;
 
 typedef unsigned char byte;
 
-const int NUM_JOBS = 6;
+const int NUM_JOBS = 8;
 static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
 static const string ATTNAMES[]={"Serendipity","Might","Intelligence","Grace","Heart","Tenacity"};
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
-static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid"}; //note: some names not final
+static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid", "VEGAN", "Cardmaster"}; //note: some names not final
 
 
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
