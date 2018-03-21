@@ -22,7 +22,7 @@ static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"}
 static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
-static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid"}; //note: some names not final
+static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid", "VEGAN", "Cardmaster"}; //note: some names not final
 
 
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
@@ -75,9 +75,6 @@ class Job {
 
 class Entity {
 	public:
-		Entity();
-		Entity(string);
-		Entity(int);
 		void setUpChar(string, byte, byte); //given name and job, initialize characters
 		void generateChar();
 
@@ -85,8 +82,9 @@ class Entity {
 		void addEquipment(EquipItem);
 		void addUseable(UseItem);
 		void listAttributes(); //list all info on character in nice format
-		void tick(int, multiset<Entity>& inDungeon);
-		bool operator< (Entity E);
+		void tick(int);
+		bool operator< (const Entity& e) const {return grace < e.grace;}
+		bool operator> (const Entity& e) const {return grace > e.grace;}
 		int getCooldown() {return cooldown;}
 		int getGrace() {return grace;}
 		void save();
@@ -96,6 +94,7 @@ class Entity {
 		Job job;
 		string species;
 		byte alignment;
+		int npc;
 		map<string, EquipItem> equipment; //mapped under type, ie "HAT", "TORSO", "WEAPON", etc.
 		map<string, UseItem> useables; //mapped under type, ie "POTION", etc.
 		int cash;
@@ -107,5 +106,5 @@ class Entity {
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
-		void act(multiset<Entity>& inDungeon);
+		void act();
 };

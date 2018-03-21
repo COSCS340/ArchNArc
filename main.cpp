@@ -1,9 +1,12 @@
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <unistd.h>
+#include <set>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 #include "fields.h"
 #include "entities.h"
 using namespace std;
@@ -13,11 +16,14 @@ typedef unsigned char byte;
 byte cinit();
 byte crun();
 byte cterm();
+bool playerInDungeon(vector<Entity>);
+bool inBattle(Entity*[]);
+void handler(Entity*[]);
 
 int spid; // PID of the server, only set to non-zero if this is the client that launched the server
 
 int main(int argc,char** args) {
-	IS in = new_inputstruct(NULL);
+	//IS in = new_inputstruct(NULL);
 	printf("Welcome to Archery & Arcana, player.\n");
 	if(cinit()) return 1;
 	if(crun()) return 1;
@@ -130,8 +136,8 @@ int main(int argc,char** args) {
 		if (place > 6)
 			break;
 	}
-	
-	jettison_inputstruct(in);
+	//jettison_inputstruct(in);
+	handler(party);
 }
 
 byte cinit() {
@@ -147,4 +153,43 @@ byte crun() {
 byte cterm() {
 
     return 0;
+}
+
+void handler (Entity* party[]) {
+	int running = 1;
+	vector<Entity> inDungeon;
+	cout << "before";
+	for (int i = 0; party[i] != NULL; i++)
+		inDungeon.push_back(*party[i]);
+	cout << "after";
+	sort(inDungeon.begin(), inDungeon.end());
+	for (int i = 0; i < 5; i++)
+		int j = 0;
+    while(running == 1){  
+		int tFactor = 100;
+		if (playerInDungeon(inDungeon)){
+			if (inBattle(party))
+				tFactor = 1;
+			else
+				tFactor = 10;
+			for (size_t i = 0; i < inDungeon.size(); i++){
+				inDungeon[i].tick(tFactor);
+			}
+		}
+		if (false)// need to exit
+			running = 0;
+    }
+}
+
+bool playerInDungeon(vector <Entity> sEntity) {
+	for (size_t i = 0; i < sEntity.size(); i++){
+		if (!sEntity[i].npc)
+			return true;
+	}
+	return false;
+}
+
+bool inBattle (Entity* party[]) {
+	return false;
+	//Not sure how we will be storing rooms, just need to check and see if enemies are in the room with the player 
 }

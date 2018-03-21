@@ -33,22 +33,6 @@ const vector<string> attack_vec = {"attack", "hit"};
 const vector<string> check_vec = {"check", "scan", "look", "examine"};
 const vector<string> take_vec = {"take", "pickup", "grab", "snatch"};
 
-int action();
-int synonyms(char*);
-void actionUse(IS);
-void actionCheck(IS);
-void actionTry(IS);
-void actionHelp();
-void badInput();
-
-int main () {
-	int j = 1;
-	while (j){
-		cout << "What would you like to do?" << endl;
-		j = action();
-	}
-}
-
 int action () {
 	
 	int selection;

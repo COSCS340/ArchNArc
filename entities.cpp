@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cctype>
 #include <string>
+//#include "anaParser.h"
 #include "entities.h"
 #include "fields.h"
 
@@ -24,141 +25,13 @@ const int NUM_TITLES = 48;
 //to contrast with
 //
 //void Entity::loadGame() {
-Entity::Entity () {
-	//have now changed it to do all the stuff in main, then call setUpChar();
-	//may change/reorganize later.
-	return;
-	string temp;
-	printf("Enter your characters name: ");
-	getline(std::cin, temp);
-	name = temp;
-	//char ans = 'j';
-
-	//UNLESS WE END UP ADDING RACES, WE MIGHT DELETE THE FOLLOWING.
-	//I'M LEAVING IT FOR NOW, THOUGH.
-
-	/*
-	while (ans == 'j'){
-		printf("Would you like your charater to be a half breed? (y/n)");
-		cin >> ans;
-		ans = tolower(ans);
-		if (ans == 'y' || ans == 'n')
-			break;
-		printf("Incorrect input. Try again.");
-		ans = 'j';
-	}
-	if (ans == 'n'){
-		while () {
-			prinftf("What is %s's race?", name.c_str());
-			cin >> temp;
-			for (int i = 0; i < temp.size(); i++)
-				temp[i] = tolower(temp[i]);
-			if (temp == "human") {
-				serendipity = rand()%20;
-				might = 8;
-				intelligence = 8;
-				grace = 8;
-				heart = 8;
-				tenacity = 8;
-				break;
-			}
-			else
-				printf("Invalid input. Try again.\n");
-		}
-	}
-	else {
-		while () {
-			prinftf("What is %s's first race?", name.c_str());
-			cin >> temp;
-			for (int i = 0; i < temp.size(); i++)
-				temp[i] = tolower(temp[i]);
-			if (temp == "human") {
-				serendipity = rand()%10;
-				might = 4;
-				intelligence = 4;
-				grace = 4;
-				heart = 4;
-				tenacity = 4;
-				break;
-			}
-			else
-				printf("Invalid input. Try again.\n");
-		}
-		while () {
-			prinftf("What is %s's second race?", name.c_str());
-			cin >> temp;
-			for (int i = 0; i < temp.size(); i++)
-				temp[i] = tolower(temp[i]);
-			if (temp == "human") {
-				serendipity += rand()%10;
-				might += 4;
-				intelligence += 4;
-				grace += 4;
-				heart += 4;
-				tenacity += 4;
-				break;
-			}
-			else
-				printf("Invalid input. Try again.\n");
-		}
-	}
-	*/
-
-	printf("What class would you like to be? Please choose one of the following.\n");
-	printf(" ----------------------------\n");
-	for(int i = 0; i < NUM_JOBS; i++) {
-		printf("| %5d %-20s |\n", i+1, JOBS[i].c_str());
-		//print job descriptions?
-	}
-	printf(" ----------------------------\n");
-	while(true) {
-		printf(" >> ");
-		getline(std::cin, temp);
-		if(temp == JOBS[0] || temp[0] == '1') {
-			//however you use the cursed 'byte' nonsense to say
-			//"Hey, make me a fighter"
-			//setUpChar();
-			break;
-		} else if(temp == JOBS[1] || temp[0] == '2') {
-			//however you use the cursed 'byte' nonsense to say
-			//"Hey, make me a gambler"
-			//setUpChar();
-			break;
-		} else if(temp == JOBS[2] || temp[0] == '3') {
-			//however you use the cursed 'byte' nonsense to say
-			//"Hey, make me a priz wiz"
-			//setUpChar();
-			break;
-		} else if(temp == JOBS[3] || temp[0] == '4') {
-			//however you use the cursed 'byte' nonsense to say
-			//"Hey, make me a clay warrior"
-			//setUpChar()
-			break;
-		} else if(temp == JOBS[4] || temp[0] == '5') {
-			//however you use the cursed 'byte' nonsense to say
-			//"Hey, make me a dancomancer"
-			//setUpChar()
-			break;
-		} else if(temp == JOBS[5] || temp[0] == '6') {
-			//however you use the cursed 'byte' nonsense to say
-			//"Hey, make me an anime kid"
-			//setUpChar()
-			break;
-		} else { //bad input
-			printf("I don't recognize that. Please try again.\n");
-		}
-	}
-}
-
-Entity::Entity(string fileName) {
-	
-}
 
 typedef unsigned char byte;
 
 //r == race
 //c == class
 void Entity::setUpChar(string n, byte r, byte c) {
+	npc = 0;
 	cash = 500; //or whatever we let them start with
 	level = 1;
 	name = n;
@@ -248,21 +121,29 @@ void Entity::listAttributes() {
 	printf("\n");
 }
 
-void Entity::tick (int tFactor, multiset <Entity>& inDungeon) {
+void Entity::tick (int tFactor) {
 	if (cooldown <= tFactor){
 		cooldown = 0;
-		act(inDungeon);
+		act();
+		return;
 	}
 	cooldown -= tFactor;
 }
 
-void Entity::act(multiset <Entity>& inDungeon) {
+void Entity::act() {
+	int a;
+	cout << "What does " << name  << " do? ";
+	cin >> a;
+	if (a == 0){
+		cout << "You attack" << endl;
+		cooldown = 100;
+	}
+	if (a == 1){
+		cout << "You defend" << endl;
+		cooldown = 10;
+	}
 	//action();
 	// Then take parsed data and perform actions
-}
-
-bool Entity::operator< (Entity e){
-	return grace < e.getGrace();
 }
 
 void Entity::load(ifstream& input) {
