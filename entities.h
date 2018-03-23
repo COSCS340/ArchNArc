@@ -17,7 +17,7 @@ using namespace std;
 
 typedef unsigned char byte;
 
-const int NUM_JOBS = 6;
+const int NUM_JOBS = 8;
 static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
 static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
 static const string RACES[]={"human","chosen"};
