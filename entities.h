@@ -22,7 +22,7 @@ static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"}
 static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
-static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid", "VEGAN", "Cardmaster"}; //note: some names not final
+static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid", "Illusionist", "Cardmaster"}; //note: some names not final
 static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info"};
 
 

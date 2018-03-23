@@ -284,9 +284,6 @@ void Entity::npcAttack() {
 			target = rand()%room->inRoom.size();
 			ePtr = room->inRoom[target];
 		}
-		//for (int i = 0; i < room->inRoom.size(); i++)
-		//	if (name == room->inRoom[i]->name)
-		//		ePtr = room->inRoom[i];
 		printf("%s attacks %s\n", name.c_str(), ePtr->name.c_str());
 		int check = rand()%20;
 		if (attributes[3]+check < ePtr->attributes[3]+(rand()%20)){

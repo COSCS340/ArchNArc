@@ -69,7 +69,7 @@ int main(int argc,char** args) {
 				flag = 1;
 				printf(" >> ");
 				getline(cin, temp);
-				if(temp[0] >= '1' && temp[0] <= '6') { //note: change second item to however many classes we end up having
+				if(temp[0] >= '1' && temp[0] <= '8') { //note: change second item to however many classes we end up having
 					temp[1] = '\0';
 					classNum = atoi(temp.c_str()) - 1;
 					break;
