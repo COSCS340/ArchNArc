@@ -78,6 +78,7 @@ void Entity::generateChar() {
 	attributes[3] = 10;
 	attributes[4] = 10;
 	attributes[5] = 10;
+	cooldown = 0;
 	//memcpy(attributes,RACEATTS[r],6);
 }
 
@@ -122,28 +123,188 @@ void Entity::listAttributes() {
 }
 
 void Entity::tick (int tFactor) {
-	if (cooldown <= tFactor){
-		cooldown = 0;
-		act();
+	if (npc){
+		if (cooldown < tFactor)
+			cooldown = 0;
+		else
+			cooldown -= tFactor;
+		if (cur_hp < 1){
+			if (cooldown == 0){
+				cur_hp = max_hp;
+				cooldown = 50;
+			}
+			else
+				if (rand()%10000 == 9999)
+					cur_hp = max_hp;
+		}
+		if (cooldown == 0)
+			npcAttack();
 		return;
 	}
-	cooldown -= tFactor;
+	if (cur_hp < 1)
+		return;
+	if (cooldown <= tFactor)
+		cooldown = 0;
+	else
+		cooldown -= tFactor;
+	while (cooldown == 0){
+		act();
+	};
 }
 
 void Entity::act() {
-	int a;
-	cout << "What does " << name  << " do? ";
-	cin >> a;
-	if (a == 0){
-		cout << "You attack" << endl;
-		cooldown = 100;
+	int action, flag;
+	string temp;
+	printf("What should %s do?\n", name.c_str());
+	printf(" ----------------------------\n");
+	for(int i = 0; i < 5; i++) {
+		printf("| %5d %-20s |\n", i+1, DUNGEON_OPTIONS[i].c_str());
 	}
-	if (a == 1){
-		cout << "You defend" << endl;
-		cooldown = 10;
+	printf(" ----------------------------\n");
+	while(true) {
+		flag = 1;
+		printf(" >> ");
+		getline(cin, temp);
+		if(temp[0] >= '1' && temp[0] <= '5') { 
+			temp[1] = '\0';
+			action = atoi(temp.c_str()) - 1;
+			break;
+		} 
+		else {
+			for(int i = 0; temp[i] != '\0'; i++) {
+				temp[i] = tolower(temp[i]);
+			}
+			for (action = 0; action < 5; action++) {
+				if (temp == DUNGEON_OPTIONS[action]) {
+					flag = 0;
+					break;
+				}
+			}
+			if(flag == 0) {
+				break;
+			}
+			if (action == 5){ //bad input
+				printf("I don't recognize that. Please try again.\n");
+			}
+		}
 	}
-	//action();
-	// Then take parsed data and perform actions
+	if (action == 0)
+		attack();
+	else if (action == 1)
+		defend();
+	else if (action == 2)
+		skill();
+	else if (action == 3)
+		item();
+	else if (action == 4)
+		info();
+}
+
+void Entity::attack() {
+	Entity* ePtr;
+	int target, size, flag;
+	char charSize;
+	string temp;
+	size = room->inRoom.size();	
+	do {
+		printf("Who does %s attack?\n", name.c_str());
+		printf(" --------------------------------------\n");
+		for(int i = 0; i < size; i++) {
+			ePtr = room->inRoom[i];
+			printf("| %5d %-30s |\n", i+1, ePtr->name.c_str());
+		}
+		printf(" --------------------------------------\n");
+		while(true) {
+			flag = 1;
+			printf(" >> ");
+			getline(cin, temp);
+			target = atoi(temp.c_str()) - 1;
+			if(target >= 0 && target < size) { 
+				break;
+			} 
+			else {
+				for(int i = 0; temp[i] != '\0'; i++) {
+					temp[i] = tolower(temp[i]);
+				}
+				for (target = 0; target < size; target++) {
+					if (temp == room->inRoom[target]->name) {
+						flag = 0;
+						break;
+					}
+				}
+				if(flag == 0) {
+					break;
+				}
+				if (target == size){ //bad input
+					printf("I don't recognize that. Please try again.\n");
+				}
+			}
+		}
+	}while (target == size);
+	ePtr = room->inRoom[target];
+	if (ePtr->cur_hp < 1){
+		ePtr->cooldown += 100;
+		return;
+	}
+	int check = rand()%20;
+	if (attributes[3]+check < ePtr->attributes[3]+(rand()%20)){
+		printf("%s misses.\n", name.c_str());
+		cooldown = 15;
+		return;
+	}
+	check = rand()%attributes[1];
+	check -= rand()%ePtr->attributes[5];
+	check /= 2;
+	if (check < 0)
+		check = 0;
+	printf("%s deals %d damage.\n", name.c_str(), check);
+	ePtr->cur_hp -= check;
+	if (ePtr->cur_hp < 1){
+		printf("%s has died.\n", ePtr->name.c_str());
+		ePtr->cooldown = 100;
+	}
+	
+	cooldown = 10;
+}
+
+void Entity::defend() {return;}
+
+void Entity::skill() {return;}
+
+void Entity::item() {return;}
+
+void Entity::info() {return;}
+
+void Entity::npcAttack() {
+	Entity* ePtr;
+	if (npc == 1){
+		int target = rand()%room->inRoom.size();
+		ePtr = room->inRoom[target];
+		while (ePtr->name == name){
+			target = rand()%room->inRoom.size();
+			ePtr = room->inRoom[target];
+		}
+		//for (int i = 0; i < room->inRoom.size(); i++)
+		//	if (name == room->inRoom[i]->name)
+		//		ePtr = room->inRoom[i];
+		printf("%s attacks %s\n", name.c_str(), ePtr->name.c_str());
+		int check = rand()%20;
+		if (attributes[3]+check < ePtr->attributes[3]+(rand()%20)){
+			printf("%s misses.\n", name.c_str());
+			cooldown = 20;
+			return;
+		}
+		check = rand()%attributes[1];
+		check -= rand()%ePtr->attributes[5];
+		check /= 2;
+		if (check < 0)
+			check = 0;
+		printf("%s deals %d damage.\n", name.c_str(), check);
+		ePtr->cur_hp -= check;
+		if (ePtr->cur_hp < 1)
+			printf("%s has died.\n", ePtr->name.c_str());
+		cooldown = 15;
+	}
 }
 
 void Entity::load(ifstream& input) {

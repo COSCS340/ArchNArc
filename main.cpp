@@ -16,9 +16,10 @@ typedef unsigned char byte;
 byte cinit();
 byte crun();
 byte cterm();
-bool playerInDungeon(vector<Entity>);
+bool playerInDungeon(vector<Entity>&);
 bool inBattle(Entity*[]);
 void handler(Entity*[]);
+void makeDeer (Tile&, vector<Entity>&);
 
 int spid; // PID of the server, only set to non-zero if this is the client that launched the server
 
@@ -158,38 +159,73 @@ byte cterm() {
 void handler (Entity* party[]) {
 	int running = 1;
 	vector<Entity> inDungeon;
-	cout << "before";
-	for (int i = 0; party[i] != NULL; i++)
+	Tile room;
+	for (int i = 0; i < 7; i++){
+		party[i]->room = &room;
 		inDungeon.push_back(*party[i]);
-	cout << "after";
+		room.inRoom.push_back(party[i]);
+	}
+	makeDeer(room, inDungeon);
 	sort(inDungeon.begin(), inDungeon.end());
-	for (int i = 0; i < 5; i++)
-		int j = 0;
-    while(running == 1){  
-		int tFactor = 100;
+	int tFactor;
+    while(running == 1){
+		tFactor = 100;
 		if (playerInDungeon(inDungeon)){
-			if (inBattle(party))
-				tFactor = 1;
+			if (inBattle(party)){
+				tFactor = 1;}
 			else
 				tFactor = 10;
 			for (size_t i = 0; i < inDungeon.size(); i++){
 				inDungeon[i].tick(tFactor);
 			}
 		}
+		
 		if (false)// need to exit
 			running = 0;
     }
 }
 
-bool playerInDungeon(vector <Entity> sEntity) {
-	for (size_t i = 0; i < sEntity.size(); i++){
+bool playerInDungeon(vector <Entity>& sEntity) {
+	/*for (size_t i = 0; i < sEntity.size(); i++){cout << "pid" << endl;
 		if (!sEntity[i].npc)
 			return true;
+	}*/
+	return true;
+}
+
+void makeDeer (Tile& room, vector <Entity>& inDungeon) {
+	for (int i = 0; i < 5; i++){
+		Entity* ePtr = new Entity;
+		ePtr->name = "DREADED DEER ";
+		for (int j = 0; j < i; j++)
+			ePtr->name += "A";
+		ePtr->attributes = (byte*)malloc(6);
+		ePtr->max_mp = ePtr->cur_mp = 0;
+		ePtr->attributes[0] = rand()%5000;
+		ePtr->attributes[1] = rand()%15;
+		ePtr->attributes[2] = 0;
+		ePtr->attributes[3] = rand()%20;
+		ePtr->attributes[4] = 0;
+		ePtr->attributes[5] = rand()%20;
+		if (ePtr->attributes[5] < 10)
+			ePtr->attributes[5] = 10;
+		ePtr->max_hp = ePtr->cur_hp = ePtr->attributes[5]*2;
+		ePtr->npc = 1;
+		ePtr->cooldown = 0;
+		ePtr->room = &room;
+		room.inRoom.push_back(ePtr);
+		inDungeon.push_back(*ePtr);
 	}
-	return false;
 }
 
 bool inBattle (Entity* party[]) {
-	return false;
-	//Not sure how we will be storing rooms, just need to check and see if enemies are in the room with the player 
+	/*for (int i = 0; i < 7; i++){
+		cout << "ib l1" << endl;
+		for (int j = 0; j < party[i]->room->inRoom.size(); j++){
+			cout << "ib l2" << endl;
+			if (party[i]->room->inRoom[j]->npc == 1 && party[i]->room->inRoom[j]->cur_hp > 0)
+				return true;
+		}
+	}*/
+	return true;
 }

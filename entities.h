@@ -23,6 +23,7 @@ static const string ATTNAMES[]={"serendipity","might","intelligence","grace","he
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
 static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid", "VEGAN", "Cardmaster"}; //note: some names not final
+static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info"};
 
 
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
@@ -73,22 +74,32 @@ class Job {
 		unsigned char addSkillPoint(string);
 };
 
+class Tile {
+	public:
+	vector <class Entity*> inRoom;
+};
+
 class Entity {
 	public:
+		Entity() {return;}
 		void setUpChar(string, byte, byte); //given name and job, initialize characters
 		void generateChar();
-
 		void setUpChar(string n, byte r); //given name and race, initialize character
 		void addEquipment(EquipItem);
 		void addUseable(UseItem);
 		void listAttributes(); //list all info on character in nice format
 		void tick(int);
-		bool operator< (const Entity& e) const {return grace < e.grace;}
-		bool operator> (const Entity& e) const {return grace > e.grace;}
+		bool operator< (const Entity& e) const {return grace > e.grace;}
+		//bool operator> (const Entity& e) const {return grace < e.grace;}
 		int getCooldown() {return cooldown;}
 		int getGrace() {return grace;}
 		void save();
 		void load(ifstream&);
+		void attack();
+		void defend();
+		void skill();
+		void item();
+		void info();
 //	private:
 		string name;
 		Job job;
@@ -107,4 +118,6 @@ class Entity {
 		int max_mp;
 		int cur_mp;
 		void act();
+		Tile* room;
+		void npcAttack();
 };
