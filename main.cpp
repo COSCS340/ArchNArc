@@ -47,6 +47,8 @@ int main(int argc,char** args) {
 
 	setUpParty(party);
 
+	handler(party);
+
 	jettison_inputstruct(in);
 
 	return(0);
