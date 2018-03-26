@@ -24,8 +24,6 @@ static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
 static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancer", "anime kid", "vegan", "cardmaster"}; //note: some names not final
 
-void setUpParty(Entity[]);
-
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
 //IF WE WANT GOOD CODING PRACTICE, IT CAN BE TWEAKED LATER, BUT FOR NOW,
 //EVERYTHING IS HELD IN PUBLIC TRUST. WHOO COMMUNISM.
@@ -115,3 +113,5 @@ class Entity {
 		int cur_mp;
 		void act(multiset<Entity>& inDungeon);
 };
+
+void setUpParty(Entity* party[]);

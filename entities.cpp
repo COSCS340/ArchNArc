@@ -16,7 +16,7 @@ const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader",
 const int NUM_NAMES = 34;
 const int NUM_TITLES = 48;
 
-void setUpParty(Entity party[]) {
+void setUpParty(Entity* party[]) {
 	int place = 0;
 	int i;
 	char ans;
@@ -29,7 +29,7 @@ void setUpParty(Entity party[]) {
 	int flag;
 
 	for(i = 0; i < 7; i++)
-		par[i] = NULL;
+		party[i] = NULL;
 
 	while(true) {
 		while(true) {
@@ -675,7 +675,7 @@ void Entity::skillOne() {
 	}
 }
 
-void Entity::skillOne() {
+void Entity::skillTwo() {
 	int i;
 	for(i = 0; i < NUM_JOBS; i++) {
 		if(job.name == JOBS[i]) {

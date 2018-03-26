@@ -37,6 +37,12 @@ int main(int argc,char** args) {
 
 	srand(time(NULL));
 
+	setUpParty(party);
+
+	jettison_inputstruct(in);
+
+	return(0);
+
 	for (i = 0; i < 7; i++)
 		party[i] = NULL;
 	while (true) {
