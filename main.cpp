@@ -132,8 +132,6 @@ int main(int argc,char** args) {
 			party[place] = new Entity;
 			party[place]->generateChar();
 			party[place]->listAttributes();
-			//delete later
-			party[place]->save();
 			place++;
 		}
 		if (place > 6)

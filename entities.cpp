@@ -16,6 +16,126 @@ const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader",
 const int NUM_NAMES = 34;
 const int NUM_TITLES = 48;
 
+void setUpParty(Entity party[]) {
+	int place = 0;
+	int i;
+	char ans;
+	string name;
+	string fileName;
+	string temp;
+	string junk;
+	byte classNum;
+	ifstream input;
+	int flag;
+
+	for(i = 0; i < 7; i++)
+		par[i] = NULL;
+
+	while(true) {
+		while(true) {
+			printf("Would you like to create a new character?(y/n) ");
+			getline(cin, junk);
+			ans = tolower(junk[0]);
+			if (ans == 'y' || ans == 'n')
+				break;
+			printf("Error, incorrect input. Try Again.");
+		}
+		if(ans == 'y') {
+			party[place] = new Entity;
+			printf ("Enter the character's name: ");
+			getline(cin, name);
+			printf("What class would you like to be? Please choose one of the following.\n");
+			printf(" ----------------------------\n");
+			for(int i = 0; i < NUM_JOBS; i++) {
+				printf("| %5d %-20s |\n", i+1, JOBS[i].c_str());
+				//print job descriptions?
+			}
+			printf(" ----------------------------\n");
+			while(true) {
+				flag = 1;
+				printf(" >> ");
+				getline(cin, temp);
+				if(temp[0] >= '1' && temp[0] <= '6') { //note: change second item to however many classes we end up having
+					temp[1] = '\0';
+					classNum = atoi(temp.c_str()) - 1;
+					break;
+				} else {
+					for(int i = 0; temp[i] != '\0'; i++) {
+						temp[i] = tolower(temp[i]);
+					}
+					for (classNum = 0; classNum < 6; classNum++) {
+						if (temp == JOBS[classNum]) {
+							flag = 0;
+							break;
+						}
+					}
+					if(flag == 0) {
+						break;
+					}
+					if (classNum == 6){ //bad input
+						printf("I don't recognize that. Please try again.\n");
+					}
+				}
+			}
+			party[place]->setUpChar(name, (byte) 0, classNum);
+			party[place]->listAttributes();
+			place++;
+			if(place > 6){
+				break;
+			}
+			continue;
+		}
+
+		//START FROM HERE!!! LOAD CHAR!
+		while(true) {
+			printf ("Would you like to load a character?(y/n) ");
+			getline(cin, junk);
+			ans = tolower(junk[0]);
+			if (ans == 'y' || ans == 'n')
+				break;
+			printf("Error, incorrect input. Try Again.");
+		}
+		if(ans == 'y') {
+			party[place] = new Entity;
+			while(true) {
+				fileName = "";
+				printf("Enter your character's name: ");
+				getline(cin, name);
+				for (i = 0; i < name.size(); i++) {
+					if (name[i] != ' ') {
+						fileName[i] = tolower(name[i]);
+					} else {
+						fileName[i] = '_';
+					}
+				}
+				fileName[i] = '.';
+				fileName[i+1] = 't';
+				fileName[i+2] = 'x';
+				fileName[i+3] = 't';
+				fileName[i+4] = '\0';
+				input.open(fileName.c_str());
+				if(input.fail()) {
+					printf("Bad file. Try again.\n");
+				} else {
+					break;
+				}
+			}
+			party[place]->load(input);
+			input.close();
+			place++;
+		} else {
+			printf("Then let's generate a character for you.\n");
+			party[place] = new Entity;
+			party[place]->generateChar();
+			party[place]->listAttributes();
+			place++;
+		}
+		if(place > 6) {
+			break;
+		}
+	}
+}
+
 Skill::Skill() {
 
 }
@@ -495,4 +615,99 @@ void Entity::save() {
 	}
 
 	output.close();
+}
+
+void Entity::levelUp() {
+	int temp;
+
+	level++;
+	temp = attributes[level%6];
+	temp++;
+	attributes[level%6] = (byte)temp;
+
+	if(level == 3) {
+		skillOne();
+	}
+
+	if(level == 5) {
+		skillTwo();
+	}
+
+	if(level == 8) {
+		skillThree();
+	}
+}
+
+void Entity::skillOne() {
+	int i;
+	for(i = 0; i < NUM_JOBS; i++) {
+		if(job.name == JOBS[i]) {
+			break;
+		}
+	}
+
+	//add skills earned at level 3
+	switch(i) {
+		case 0: //class == fightared
+
+			break;
+		case 1: //class == gambler
+
+			break;
+		case 2: //class == prism wizard
+
+			break;
+		case 3: //class == clay warrior
+
+			break;
+		case 4: //class == dancer
+
+			break;
+		case 5: //class == anime kid
+
+			break;
+		case 6: //class == vegan
+
+			break;
+		case 7: //class == cardmaster
+
+			break;
+	}
+}
+
+void Entity::skillOne() {
+	int i;
+	for(i = 0; i < NUM_JOBS; i++) {
+		if(job.name == JOBS[i]) {
+			break;
+		}
+	}
+
+	//add skills earned at level 5
+	switch(i) {
+		case 0: //class == fightared
+
+			break;
+		case 1: //class == gambler
+
+			break;
+		case 2: //class == prism wizard
+
+			break;
+		case 3: //class == clay warrior
+
+			break;
+		case 4: //class == dancer
+
+			break;
+		case 5: //class == anime kid
+
+			break;
+		case 6: //class == vegan
+
+			break;
+		case 7: //class == cardmaster
+		
+			break;
+	}
 }
