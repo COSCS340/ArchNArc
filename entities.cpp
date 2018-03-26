@@ -202,7 +202,7 @@ void Entity::act() {
 
 void Entity::attack() {
 	Entity* ePtr;
-	int target, size, flag;
+	int target, size, flag, strSize;
 	char charSize;
 	string temp;
 	size = room->inRoom.size();	
@@ -210,8 +210,17 @@ void Entity::attack() {
 		printf("Who does %s attack?\n", name.c_str());
 		printf(" --------------------------------------\n");
 		for(int i = 0; i < size; i++) {
-			ePtr = room->inRoom[i];
-			printf("| %5d %-30s |\n", i+1, ePtr->name.c_str());
+			if (room->inRoom[i]->cur_hp < 1){
+				strSize = room->inRoom[i]->name.size();
+				room->inRoom[i]->name += " dead";
+				ePtr = room->inRoom[i];
+				printf("| %5d %-30s |\n", i+1, ePtr->name.c_str());
+				room->inRoom[i]->name.resize(strSize);
+			}
+			else {
+				ePtr = room->inRoom[i];
+				printf("| %5d %-30s |\n", i+1, ePtr->name.c_str());
+			}
 		}
 		printf(" --------------------------------------\n");
 		while(true) {
@@ -254,7 +263,7 @@ void Entity::attack() {
 	}
 	check = rand()%attributes[1];
 	check -= rand()%ePtr->attributes[5];
-	check /= 2;
+	check *= 2;
 	if (check < 0)
 		check = 0;
 	printf("%s deals %d damage.\n", name.c_str(), check);
@@ -293,7 +302,7 @@ void Entity::npcAttack() {
 		}
 		check = rand()%attributes[1];
 		check -= rand()%ePtr->attributes[5];
-		check /= 2;
+		check *= 2;
 		if (check < 0)
 			check = 0;
 		printf("%s deals %d damage.\n", name.c_str(), check);
