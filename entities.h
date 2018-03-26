@@ -19,12 +19,17 @@ typedef unsigned char byte;
 
 const int NUM_JOBS = 8;
 static const string EQUIPSLOTS[]={"weapon","head","torso","hands","legs","feet"};
-static const string ATTNAMES[]={"serendipity","might","intelligence","grace","heart","tenacity"};
+static const string ATTNAMES[]={"Serendipity","Might","Intelligence","Grace","Heart","Tenacity"};
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
+<<<<<<< HEAD
 static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancomancer", "anime kid", "Illusionist", "Cardmaster"}; //note: some names not final
 static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info"};
+=======
+static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancer", "anime kid", "vegan", "cardmaster"}; //note: some names not final
+>>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
 
+void setUpParty(Entity[]);
 
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
 //IF WE WANT GOOD CODING PRACTICE, IT CAN BE TWEAKED LATER, BUT FOR NOW,
@@ -54,6 +59,7 @@ class UseItem {
 
 class Skill {
 	public:
+		Skill();
 		Skill(int);
 		//~Skill();
 		string name;
@@ -95,11 +101,18 @@ class Entity {
 		int getGrace() {return grace;}
 		void save();
 		void load(ifstream&);
+<<<<<<< HEAD
 		void attack();
 		void defend();
 		void skill();
 		void item();
 		void info();
+=======
+		void levelUp();
+		void skillOne();
+		void skillTwo();
+		void skillThree();
+>>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
 //	private:
 		string name;
 		Job job;

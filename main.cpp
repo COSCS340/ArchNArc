@@ -24,7 +24,12 @@ void makeDeer (Tile&, vector<Entity>&);
 int spid; // PID of the server, only set to non-zero if this is the client that launched the server
 
 int main(int argc,char** args) {
+<<<<<<< HEAD
 	//IS in = new_inputstruct(NULL);
+=======
+	int i;
+	IS in = new_inputstruct(NULL);
+>>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
 	printf("Welcome to Archery & Arcana, player.\n");
 	if(cinit()) return 1;
 	if(crun()) return 1;
@@ -43,7 +48,7 @@ int main(int argc,char** args) {
 
 	srand(time(NULL));
 
-	for (int i = 0; i < 7; i++)
+	for (i = 0; i < 7; i++)
 		party[i] = NULL;
 	while (true) {
 		while (true){
@@ -113,13 +118,17 @@ int main(int argc,char** args) {
 				fileName = "";
 				printf("Enter your character's name: ");
 				getline(cin, name);
-				for (int i = 0; i < name.size(); i++)
+				for (i = 0; i < name.size(); i++)
 					if (name[i] != ' ') {
-						fileName += tolower(name[i]);
+						fileName[i] = tolower(name[i]);
 					} else {
-						fileName += '_';
+						fileName[i] = '_';
 					}
-				fileName += ".txt";
+				fileName[i] = '.';
+				fileName[i+1] = 't';
+				fileName[i+2] = 'x';
+				fileName[i+3] = 't';
+				fileName[i+4] = '\0';
 				input.open(fileName.c_str());
 				if (input.fail())
 					printf("Bad file. Try again.");
@@ -127,11 +136,13 @@ int main(int argc,char** args) {
 					break;
 			}
 			party[place]->load(input);
+			input.close();
 			place++;
 		} else {
 			printf("Then let's generate a character for you.\n");
 			party[place] = new Entity;
 			party[place]->generateChar();
+			party[place]->listAttributes();
 			place++;
 		}
 		if (place > 6)

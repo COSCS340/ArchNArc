@@ -17,6 +17,130 @@ const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader",
 const int NUM_NAMES = 34;
 const int NUM_TITLES = 48;
 
+void setUpParty(Entity party[]) {
+	int place = 0;
+	int i;
+	char ans;
+	string name;
+	string fileName;
+	string temp;
+	string junk;
+	byte classNum;
+	ifstream input;
+	int flag;
+
+	for(i = 0; i < 7; i++)
+		par[i] = NULL;
+
+	while(true) {
+		while(true) {
+			printf("Would you like to create a new character?(y/n) ");
+			getline(cin, junk);
+			ans = tolower(junk[0]);
+			if (ans == 'y' || ans == 'n')
+				break;
+			printf("Error, incorrect input. Try Again.");
+		}
+		if(ans == 'y') {
+			party[place] = new Entity;
+			printf ("Enter the character's name: ");
+			getline(cin, name);
+			printf("What class would you like to be? Please choose one of the following.\n");
+			printf(" ----------------------------\n");
+			for(int i = 0; i < NUM_JOBS; i++) {
+				printf("| %5d %-20s |\n", i+1, JOBS[i].c_str());
+				//print job descriptions?
+			}
+			printf(" ----------------------------\n");
+			while(true) {
+				flag = 1;
+				printf(" >> ");
+				getline(cin, temp);
+				if(temp[0] >= '1' && temp[0] <= '6') { //note: change second item to however many classes we end up having
+					temp[1] = '\0';
+					classNum = atoi(temp.c_str()) - 1;
+					break;
+				} else {
+					for(int i = 0; temp[i] != '\0'; i++) {
+						temp[i] = tolower(temp[i]);
+					}
+					for (classNum = 0; classNum < 6; classNum++) {
+						if (temp == JOBS[classNum]) {
+							flag = 0;
+							break;
+						}
+					}
+					if(flag == 0) {
+						break;
+					}
+					if (classNum == 6){ //bad input
+						printf("I don't recognize that. Please try again.\n");
+					}
+				}
+			}
+			party[place]->setUpChar(name, (byte) 0, classNum);
+			party[place]->listAttributes();
+			place++;
+			if(place > 6){
+				break;
+			}
+			continue;
+		}
+
+		//START FROM HERE!!! LOAD CHAR!
+		while(true) {
+			printf ("Would you like to load a character?(y/n) ");
+			getline(cin, junk);
+			ans = tolower(junk[0]);
+			if (ans == 'y' || ans == 'n')
+				break;
+			printf("Error, incorrect input. Try Again.");
+		}
+		if(ans == 'y') {
+			party[place] = new Entity;
+			while(true) {
+				fileName = "";
+				printf("Enter your character's name: ");
+				getline(cin, name);
+				for (i = 0; i < name.size(); i++) {
+					if (name[i] != ' ') {
+						fileName[i] = tolower(name[i]);
+					} else {
+						fileName[i] = '_';
+					}
+				}
+				fileName[i] = '.';
+				fileName[i+1] = 't';
+				fileName[i+2] = 'x';
+				fileName[i+3] = 't';
+				fileName[i+4] = '\0';
+				input.open(fileName.c_str());
+				if(input.fail()) {
+					printf("Bad file. Try again.\n");
+				} else {
+					break;
+				}
+			}
+			party[place]->load(input);
+			input.close();
+			place++;
+		} else {
+			printf("Then let's generate a character for you.\n");
+			party[place] = new Entity;
+			party[place]->generateChar();
+			party[place]->listAttributes();
+			place++;
+		}
+		if(place > 6) {
+			break;
+		}
+	}
+}
+
+Skill::Skill() {
+
+}
+
 //I feel this might work better as a function than a contructor. What do
 //y'all think? Maybe something like
 //
@@ -37,6 +161,9 @@ void Entity::setUpChar(string n, byte r, byte c) {
 	name = n;
 	job.name = JOBS[c];
 
+	//if we end up doing alternate races, fix it here
+	species = "Human";
+
 	attributes = (byte*)malloc(6);
 	max_hp = cur_hp = 20;
 	max_mp = cur_mp = 10;
@@ -48,10 +175,43 @@ void Entity::setUpChar(string n, byte r, byte c) {
 	attributes[5] = 10;
     //memcpy(attributes,RACEATTS[r],6);
 
+	if(job.name == "fightard" || job.name == "anime kid") { //medium armor
+		equipment["Weapon"].name = "Dagger";
+		equipment["Weapon"].type = "edged weapon";
+		equipment["Weapon"].attack = 3;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Leather Tunic";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 2;
+	} else if(job.name == "clay warrior") { //heavy armor
+		equipment["Weapon"].name = "Oak Club";
+		equipment["Weapon"].type = "blunt weapon";
+		equipment["Weapon"].attack = 1;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Wooden Breastplate";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 4;
+	} else { //light armor
+		equipment["Weapon"].name = "Small Pamphlet";
+		equipment["Weapon"].type = "magic paper";
+		equipment["Weapon"].attack = 4;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Airy Robe";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 1;
+	}
+
+	useables["potion"].name = "Small potion";
+	useables["potion"].type = "healing";
+	useables["potion"].how_many = 3;
+	useables["potion"].effect_size = 4;
 }
 
 void Entity::generateChar() {
-	int temp1, temp2;
+	byte temp1, temp2;
 
 	cash = 500;
 	level = 1;
@@ -69,6 +229,7 @@ void Entity::generateChar() {
 	printf("And their class is %s.\n", job.name.c_str());
 	printf("So please don't get them killed.\n");
 
+<<<<<<< HEAD
 	attributes = (byte*)malloc(6);
 	max_hp = cur_hp = 20;
 	max_mp = cur_mp = 10;
@@ -80,6 +241,9 @@ void Entity::generateChar() {
 	attributes[5] = 10;
 	cooldown = 0;
 	//memcpy(attributes,RACEATTS[r],6);
+=======
+	setUpChar(name, 0, temp1);
+>>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
 }
 
 void Entity::addEquipment(EquipItem a) {
@@ -105,19 +269,19 @@ void Entity::listAttributes() {
 	for(i=0;i<6;i++) printf("%-15s %d\n",ATTNAMES[i].c_str(),(int)attributes[i]);
 
 	//print skills
-	printf("\nEquipment    \n-----------------------\n");
+	printf("\nEquipment    \n-------------------------------\n");
 	for(e_it = equipment.begin(); e_it != equipment.end(); e_it++) {
-		printf("%15s %s\n", e_it->first.c_str(), e_it->second.name.c_str());
+		printf("%-15s %s\n", e_it->first.c_str(), e_it->second.name.c_str());
 	}
 
-	printf("\nSupplies     \n-----------------------\n");
+	printf("\nSupplies     \n-------------------------------\n");
 	for(u_it = useables.begin(); u_it != useables.end(); u_it++) {
-		printf("%15s %d\n", u_it->first.c_str(), u_it->second.how_many);
+		printf("%-15s %13d\n", u_it->second.name.c_str(), u_it->second.how_many);
 	}
 
-	printf("\nSkills       \n-----------------------\n");
+	printf("\nSkills       \n-------------------------------\n");
 	for(s_it = job.skills.begin(); s_it != job.skills.end(); s_it++) {
-		printf("%15s\n", s_it->first.c_str());
+		printf("%-15s\n", s_it->first.c_str());
 	}
 	printf("\n");
 }
@@ -314,12 +478,109 @@ void Entity::npcAttack() {
 }
 
 void Entity::load(ifstream& input) {
+	int i, j;
+	string junk, t_str, argh;
+	int temp1, temp2;
 
+	//basic character info reading
+	getline(input, name);
+	getline(input, species);
+	
+	input >> cash;
+	getline(input, junk);
+	input >> level;
+	getline(input, junk);
+	input >> cooldown;
+	getline(input, junk);
+	input >> grace;
+	getline(input, junk);
+	input >> max_hp;
+	getline(input, junk);
+	input >> cur_hp;
+	getline(input, junk);
+	input >> max_mp;
+	getline(input, junk);
+	input >> cur_mp;
+	getline(input, junk);
+	
+	attributes = (byte*)malloc(6);
+
+	for(i = 0; i < 6; i++) {
+		getline(input, t_str);
+		attributes[i] = (byte) (atoi(t_str.c_str()));
+		//input >> attributes[i];
+		//getline(input, junk);
+	}
+
+	//freaking job time
+	getline(input, job.name);
+	input >> temp1;
+	getline(input, junk);
+	for(i = 0; i < temp1; i++) {
+		getline(input, t_str);
+		job.skills[t_str].name = t_str;
+		input >> job.skills[t_str].maxlevel;
+		getline(input, junk);
+		input >> job.skills[t_str].currentlevel;
+		getline(input, junk);
+		input >> job.skills[t_str].effect_size;
+		getline(input, junk);
+		input >> job.skills[t_str].skill_type;
+		getline(input, junk);
+		input >> job.skills[t_str].mp_cost;
+		getline(input, junk);
+		input >> job.skills[t_str].accuracy;
+		getline(input, junk);
+		getline(input, job.skills[t_str].element);
+
+		input >> temp2;
+		for(j = 0; j < temp2; j++) {
+			getline(input, argh);
+			input >> job.skills[t_str].prereqs[argh];
+			getline(input, junk);
+		}
+	}
+
+	//equipment time
+	input >> temp1;
+	getline(input, junk);
+	for(i = 0; i < temp1; i++) {
+		getline(input, t_str);
+		getline(input, equipment[t_str].name);
+		getline(input, equipment[t_str].type);
+		input >> equipment[t_str].attack;
+		getline(input, junk);
+		input >> equipment[t_str].defence;
+		getline(input, junk);
+
+		input >> temp2;
+		getline(input, junk);
+		for(j = 0; j < temp2; j++) {
+			getline(input, argh);
+			input >> equipment[t_str].elemental[argh];
+			getline(input, junk);
+		}
+	}
+
+	//and. now. for. the. useables. FINALLY.
+	input >> temp1;
+	getline(input, junk);
+	for(i = 0; i < temp1; i++) {
+		getline(input, t_str);
+		getline(input, useables[t_str].name);
+		getline(input, useables[t_str].type);
+		input >> useables[t_str].how_many;
+		getline(input, junk);
+		input >> useables[t_str].effect_size;
+		getline(input, junk);
+	}
+
+	listAttributes();
 }
 
 void Entity::save() {
 	ofstream output;
-	string filename;
+	string filename, temp;
 	int i;
 	map<string, Skill>::iterator a_it;
 	map<string, byte>::iterator b_it;
@@ -327,11 +588,25 @@ void Entity::save() {
 	map<string, UseItem>::iterator d_it;
 	map<string, int>::iterator e_it;
 
+	//printf("name: %s\n", name.c_str());
+
 	for(i = 0; name[i] != '\0'; i++) {
-		filename[i] = tolower(name[i]);
+		if(name[i] == ' ') {
+			filename[i] = '_';
+		} else {
+			filename[i] = tolower(name[i]);
+		}
 	}
+
 	filename[i] = '\0';
-	filename = filename + ".txt";
+	//printf("%s\n", filename.c_str());
+	filename[i] = '.';
+	filename[i+1] = 't';
+	filename[i+2] = 'x';
+	filename[i+3] = 't';
+	filename[i+4] = '\0';
+
+	//printf("%s\n", filename.c_str());
 
 	output.open(filename.c_str());
 
@@ -340,7 +615,7 @@ void Entity::save() {
 	output << species << endl;
 
 	//I question whether this'll work. Oh well, can fix later
-	output << alignment << endl;
+	//output << alignment << endl;
 
 	output << cash << endl;
 	output << level << endl;
@@ -352,7 +627,7 @@ void Entity::save() {
 	output << cur_mp << endl;
 
 	for(i = 0; i < 6; i++) {
-		output << attributes[i] << endl;
+		output << (int)attributes[i] << endl;
 	}
 
 	//next, let's do the job data
@@ -401,4 +676,103 @@ void Entity::save() {
 	}
 
 	output.close();
+<<<<<<< HEAD
 }
+=======
+}
+
+void Entity::levelUp() {
+	int temp;
+
+	level++;
+	temp = attributes[level%6];
+	temp++;
+	attributes[level%6] = (byte)temp;
+
+	if(level == 3) {
+		skillOne();
+	}
+
+	if(level == 5) {
+		skillTwo();
+	}
+
+	if(level == 8) {
+		skillThree();
+	}
+}
+
+void Entity::skillOne() {
+	int i;
+	for(i = 0; i < NUM_JOBS; i++) {
+		if(job.name == JOBS[i]) {
+			break;
+		}
+	}
+
+	//add skills earned at level 3
+	switch(i) {
+		case 0: //class == fightared
+
+			break;
+		case 1: //class == gambler
+
+			break;
+		case 2: //class == prism wizard
+
+			break;
+		case 3: //class == clay warrior
+
+			break;
+		case 4: //class == dancer
+
+			break;
+		case 5: //class == anime kid
+
+			break;
+		case 6: //class == vegan
+
+			break;
+		case 7: //class == cardmaster
+
+			break;
+	}
+}
+
+void Entity::skillOne() {
+	int i;
+	for(i = 0; i < NUM_JOBS; i++) {
+		if(job.name == JOBS[i]) {
+			break;
+		}
+	}
+
+	//add skills earned at level 5
+	switch(i) {
+		case 0: //class == fightared
+
+			break;
+		case 1: //class == gambler
+
+			break;
+		case 2: //class == prism wizard
+
+			break;
+		case 3: //class == clay warrior
+
+			break;
+		case 4: //class == dancer
+
+			break;
+		case 5: //class == anime kid
+
+			break;
+		case 6: //class == vegan
+
+			break;
+		case 7: //class == cardmaster
+		
+			break;
+	}
+}
+>>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
