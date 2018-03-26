@@ -1,9 +1,12 @@
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 #include <unistd.h>
+#include <set>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 #include "fields.h"
 #include "entities.h"
 using namespace std;
@@ -13,12 +16,20 @@ typedef unsigned char byte;
 byte cinit();
 byte crun();
 byte cterm();
+bool playerInDungeon(vector<Entity>&);
+bool inBattle(Entity*[]);
+void handler(Entity*[]);
+void makeDeer (Tile&, vector<Entity>&);
 
 int spid; // PID of the server, only set to non-zero if this is the client that launched the server
 
 int main(int argc,char** args) {
+<<<<<<< HEAD
+	//IS in = new_inputstruct(NULL);
+=======
 	int i;
 	IS in = new_inputstruct(NULL);
+>>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
 	printf("Welcome to Archery & Arcana, player.\n");
 	if(cinit()) return 1;
 	if(crun()) return 1;
@@ -69,7 +80,7 @@ int main(int argc,char** args) {
 				flag = 1;
 				printf(" >> ");
 				getline(cin, temp);
-				if(temp[0] >= '1' && temp[0] <= '6') { //note: change second item to however many classes we end up having
+				if(temp[0] >= '1' && temp[0] <= '8') { //note: change second item to however many classes we end up having
 					temp[1] = '\0';
 					classNum = atoi(temp.c_str()) - 1;
 					break;
@@ -143,8 +154,8 @@ int main(int argc,char** args) {
 		if (place > 6)
 			break;
 	}
-	
-	jettison_inputstruct(in);
+	//jettison_inputstruct(in);
+	handler(party);
 }
 
 byte cinit() {
@@ -160,4 +171,78 @@ byte crun() {
 byte cterm() {
 
     return 0;
+}
+
+void handler (Entity* party[]) {
+	int running = 1;
+	vector<Entity> inDungeon;
+	Tile room;
+	for (int i = 0; i < 7; i++){
+		party[i]->room = &room;
+		inDungeon.push_back(*party[i]);
+		room.inRoom.push_back(party[i]);
+	}
+	makeDeer(room, inDungeon);
+	sort(inDungeon.begin(), inDungeon.end());
+	int tFactor;
+    while(running == 1){
+		tFactor = 100;
+		if (playerInDungeon(inDungeon)){
+			if (inBattle(party)){
+				tFactor = 1;}
+			else
+				tFactor = 10;
+			for (size_t i = 0; i < inDungeon.size(); i++){
+				inDungeon[i].tick(tFactor);
+			}
+		}
+		
+		if (false)// need to exit
+			running = 0;
+    }
+}
+
+bool playerInDungeon(vector <Entity>& sEntity) {
+	/*for (size_t i = 0; i < sEntity.size(); i++){cout << "pid" << endl;
+		if (!sEntity[i].npc)
+			return true;
+	}*/
+	return true;
+}
+
+void makeDeer (Tile& room, vector <Entity>& inDungeon) {
+	for (int i = 0; i < 5; i++){
+		Entity* ePtr = new Entity;
+		ePtr->name = "DREADED DEER ";
+		for (int j = 0; j < i; j++)
+			ePtr->name += "A";
+		ePtr->attributes = (byte*)malloc(6);
+		ePtr->max_mp = ePtr->cur_mp = 0;
+		ePtr->attributes[0] = rand()%5000;
+		ePtr->attributes[1] = rand()%15;
+		ePtr->attributes[2] = 0;
+		ePtr->attributes[3] = rand()%20;
+		ePtr->attributes[4] = 0;
+		ePtr->attributes[5] = rand()%20;
+		if (ePtr->attributes[5] < 10)
+			ePtr->attributes[5] = 10;
+		ePtr->max_hp = ePtr->cur_hp = ePtr->attributes[5]*2;
+		ePtr->npc = 1;
+		ePtr->cooldown = 0;
+		ePtr->room = &room;
+		room.inRoom.push_back(ePtr);
+		inDungeon.push_back(*ePtr);
+	}
+}
+
+bool inBattle (Entity* party[]) {
+	/*for (int i = 0; i < 7; i++){
+		cout << "ib l1" << endl;
+		for (int j = 0; j < party[i]->room->inRoom.size(); j++){
+			cout << "ib l2" << endl;
+			if (party[i]->room->inRoom[j]->npc == 1 && party[i]->room->inRoom[j]->cur_hp > 0)
+				return true;
+		}
+	}*/
+	return true;
 }
