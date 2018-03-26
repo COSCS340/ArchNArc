@@ -24,12 +24,9 @@ void makeDeer (Tile&, vector<Entity>&);
 int spid; // PID of the server, only set to non-zero if this is the client that launched the server
 
 int main(int argc,char** args) {
-<<<<<<< HEAD
 	//IS in = new_inputstruct(NULL);
-=======
 	int i;
 	IS in = new_inputstruct(NULL);
->>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
 	printf("Welcome to Archery & Arcana, player.\n");
 	if(cinit()) return 1;
 	if(crun()) return 1;

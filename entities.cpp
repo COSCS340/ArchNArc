@@ -229,7 +229,6 @@ void Entity::generateChar() {
 	printf("And their class is %s.\n", job.name.c_str());
 	printf("So please don't get them killed.\n");
 
-<<<<<<< HEAD
 	attributes = (byte*)malloc(6);
 	max_hp = cur_hp = 20;
 	max_mp = cur_mp = 10;
@@ -241,9 +240,7 @@ void Entity::generateChar() {
 	attributes[5] = 10;
 	cooldown = 0;
 	//memcpy(attributes,RACEATTS[r],6);
-=======
 	setUpChar(name, 0, temp1);
->>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
 }
 
 void Entity::addEquipment(EquipItem a) {
@@ -676,9 +673,6 @@ void Entity::save() {
 	}
 
 	output.close();
-<<<<<<< HEAD
-}
-=======
 }
 
 void Entity::levelUp() {
@@ -775,4 +769,7 @@ void Entity::skillTwo() {
 			break;
 	}
 }
->>>>>>> b3528aad27ce13d6bb63daf388fa3ee5fbe26a78
+
+void Entity::skillThree() {
+
+}
