@@ -320,7 +320,7 @@ int Entity::act() {
 	string temp;
 	printf("What should %s do?\n", name.c_str());
 	printf(" ----------------------------\n");
-	for(int i = 0; i < 5; i++) {
+	for(int i = 0; i < 6; i++) {
 		printf("| %5d %-20s |\n", i+1, DUNGEON_OPTIONS[i].c_str());
 	}
 	printf(" ----------------------------\n");
@@ -346,7 +346,7 @@ int Entity::act() {
 			if(flag == 0) {
 				break;
 			}
-			if (action == 5){ //bad input
+			if (action == 6){ //bad input
 				printf("I don't recognize that. Please try again.\n");
 			}
 		}
@@ -361,8 +361,10 @@ int Entity::act() {
 		item();
 	else if (action == 4)
 		info();
-	else if (action == 5)
+	else if (action == 5){
+		cooldown = 100;
 		return 0;
+	}
 	return 1;
 }
 
