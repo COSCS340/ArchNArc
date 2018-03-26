@@ -23,7 +23,7 @@ static const string ATTNAMES[]={"Serendipity","Might","Intelligence","Grace","He
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
 static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancer", "anime kid", "Illusionist", "Cardmaster"}; //note: some names not final
-static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info"};
+static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info", "Quit"};
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
 //IF WE WANT GOOD CODING PRACTICE, IT CAN BE TWEAKED LATER, BUT FOR NOW,
 //EVERYTHING IS HELD IN PUBLIC TRUST. WHOO COMMUNISM.
@@ -87,7 +87,7 @@ class Entity {
 		void addEquipment(EquipItem);
 		void addUseable(UseItem);
 		void listAttributes(); //list all info on character in nice format
-		void tick(int);
+		int tick(int);
 		bool operator< (const Entity& e) const {return grace > e.grace;}
 		//bool operator> (const Entity& e) const {return grace < e.grace;}
 		int getCooldown() {return cooldown;}

@@ -283,7 +283,7 @@ void Entity::listAttributes() {
 	printf("\n");
 }
 
-void Entity::tick (int tFactor) {
+int Entity::tick (int tFactor) {
 	if (npc){
 		if (cooldown < tFactor)
 			cooldown = 0;
@@ -300,17 +300,19 @@ void Entity::tick (int tFactor) {
 		}
 		if (cooldown == 0)
 			npcAttack();
-		return;
+		return 1;
 	}
 	if (cur_hp < 1)
-		return;
+		return 1;
 	if (cooldown <= tFactor)
 		cooldown = 0;
 	else
 		cooldown -= tFactor;
+	int temp;
 	while (cooldown == 0){
-		act();
+		temp = act();
 	};
+	return temp;
 }
 
 int Entity::act() {
@@ -326,7 +328,7 @@ int Entity::act() {
 		flag = 1;
 		printf(" >> ");
 		getline(cin, temp);
-		if(temp[0] >= '1' && temp[0] <= '5') { 
+		if(temp[0] >= '1' && temp[0] <= '6') { 
 			temp[1] = '\0';
 			action = atoi(temp.c_str()) - 1;
 			break;
