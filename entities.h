@@ -120,7 +120,7 @@ class Entity {
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
-		void act();
+		int act();
 		Tile* room;
 		void npcAttack();
 };

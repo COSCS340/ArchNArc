@@ -46,6 +46,8 @@ int main(int argc,char** args) {
 	srand(time(NULL));
 
 	setUpParty(party);
+	
+	handler(party);
 
 	jettison_inputstruct(in);
 
@@ -190,12 +192,11 @@ void handler (Entity* party[]) {
 			else
 				tFactor = 10;
 			for (size_t i = 0; i < inDungeon.size(); i++){
-				inDungeon[i].tick(tFactor);
+				running = inDungeon[i].tick(tFactor);
+				if (running == 0)
+					break;
 			}
 		}
-		
-		if (false)// need to exit
-			running = 0;
     }
 }
 

@@ -313,7 +313,7 @@ void Entity::tick (int tFactor) {
 	};
 }
 
-void Entity::act() {
+int Entity::act() {
 	int action, flag;
 	string temp;
 	printf("What should %s do?\n", name.c_str());
@@ -359,6 +359,9 @@ void Entity::act() {
 		item();
 	else if (action == 4)
 		info();
+	else if (action == 5)
+		return 0;
+	return 1;
 }
 
 void Entity::attack() {
