@@ -23,7 +23,8 @@ static const string ATTNAMES[]={"Serendipity","Might","Intelligence","Grace","He
 static const string RACES[]={"human","chosen"};
 static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
 static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancer", "anime kid", "Illusionist", "Cardmaster"}; //note: some names not final
-static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info", "Quit"};
+static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info", "Move", "Quit"};
+static const string DIRECTIONS[] = {"North", "South", "East", "West"};
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
 //IF WE WANT GOOD CODING PRACTICE, IT CAN BE TWEAKED LATER, BUT FOR NOW,
 //EVERYTHING IS HELD IN PUBLIC TRUST. WHOO COMMUNISM.
@@ -75,6 +76,8 @@ class Job {
 
 class Tile {
 	public:
+	Tile () {for (int i = 0; i < 4; i++) doors[i] = NULL;}
+	Tile* doors[4];
 	vector <class Entity*> inRoom;
 };
 
@@ -99,10 +102,12 @@ class Entity {
 		void skill();
 		void item();
 		void info();
+		void move();
 		void levelUp();
 		void skillOne();
 		void skillTwo();
 		void skillThree();
+		vector <void (*)(Entity*)> skills;
 //	private:
 		string name;
 		Job job;
@@ -126,3 +131,5 @@ class Entity {
 };
 
 void setUpParty(Entity* party[]);
+
+void coinFlip(Entity*);

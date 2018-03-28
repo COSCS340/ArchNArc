@@ -12,10 +12,10 @@
 #include "entities.h"
 #include "fields.h"
 
-const string pos_names[] = {"Manaliabrid", "Osfameron", "Deryn", "Brutha", "Anevka", "Enoch", "Sandrilene", "Theophrastus", "Hazel", "Kevin", "Gladys", "Anatolio", "Lyseria", "Bob", "Azula", "Krauss", "Amakusa", "Rudolph", "Adara", "Janus", "Aeronwen", "Keichi", "Branwen", "Alwyn", "Dwynwen", "Cadfael", "Hywela", "Emlyn", "Maelona", "Gwalchgwyn", "Nerys", "Idris", "Sioned", "Llywellyn", "Yseult","Leimu","Yukari","Marisa","Aya"};
-const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader", " the Incompetent", " the Flautist", " the Sleep-Deprived", " the Tennessean", " the Overlord", " the Hatter", " the Sunseeker", " the Fluffy", " the Timejumper", " the Darwinist", " the Mentor", " the Lucky", " the Left-Footed", " the Ace", " the Stingy", " the Executioner", " the Fraudulent", " the NPC", " the Hopeful", " the Morbid", " the Bemused", " the Concerned", " the Unworthy", " the Tree-Hugger", " the Earthbound", " the Oblivious", " the Immortal", " the Mortal", " the Corrupted", " the Pessimist", " the Seg-Fault", " the Silent", " the Clothed", " the Paranoid", " the Caffeinated", " the Lost", " the Error", " the Conspirator", " the Punctual", " the Liar", " the Felon", " the Ignoble", " the Mispronounced", " the Righteous", " the Blasphemous"};
-const int NUM_NAMES = 38;
-const int NUM_TITLES = 48;
+const string pos_names[] = {"Manaliabrid", "Osfameron", "Deryn", "Brutha", "Anevka", "Enoch", "Sandrilene", "Theophrastus", "Hazel", "Kevin", "Gladys", "Anatolio", "Lyseria", "Bob", "Azula", "Krauss", "Amakusa", "Rudolph", "Adara", "Janus", "Aeronwen", "Keichi", "Branwen", "Alwyn", "Dwynwen", "Cadfael", "Hywela", "Emlyn", "Maelona", "Gwalchgwyn", "Nerys", "Idris", "Sioned", "Llywellyn", "Yseult", "Leimu", "Yukari", "Marisa", "Aya", "Jenga", "Califaan", "STEVE"};
+const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader", " the Incompetent", " the Flautist", " the Sleep-Deprived", " the Tennessean", " the Overlord", " the Hatter", " the Sunseeker", " the Fluffy", " the Timejumper", " the Darwinist", " the Mentor", " the Lucky", " the Left-Footed", " the Ace", " the Stingy", " the Executioner", " the Fraudulent", " the NPC", " the Hopeful", " the Morbid", " the Bemused", " the Concerned", " the Unworthy", " the Tree-Hugger", " the Earthbound", " the Oblivious", " the Immortal", " the Mortal", " the Corrupted", " the Pessimist", " the Seg-Fault", " the Silent", " the Clothed", " the Paranoid", " the Caffeinated", " the Lost", " the Error", " the Conspirator", " the Punctual", " the Liar", " the Felon", " the Ignoble", " the Mispronounced", " the Righteous", " the Blasphemous", "the Stupid Head", " the Bane of Existence"};
+const int NUM_NAMES = 41;
+const int NUM_TITLES = 50;
 
 void setUpParty(Entity* party[]) {
 	int place = 0;
@@ -241,6 +241,7 @@ void Entity::generateChar() {
 	cooldown = 0;
 	//memcpy(attributes,RACEATTS[r],6);
 	setUpChar(name, 0, temp1);
+	skills.push_back(coinFlip);
 }
 
 void Entity::addEquipment(EquipItem a) {
@@ -320,7 +321,7 @@ int Entity::act() {
 	string temp;
 	printf("What should %s do?\n", name.c_str());
 	printf(" ----------------------------\n");
-	for(int i = 0; i < 6; i++) {
+	for(int i = 0; i < 7; i++) {
 		printf("| %5d %-20s |\n", i+1, DUNGEON_OPTIONS[i].c_str());
 	}
 	printf(" ----------------------------\n");
@@ -328,7 +329,7 @@ int Entity::act() {
 		flag = 1;
 		printf(" >> ");
 		getline(cin, temp);
-		if(temp[0] >= '1' && temp[0] <= '6') { 
+		if(temp[0] >= '1' && temp[0] <= '7') { 
 			temp[1] = '\0';
 			action = atoi(temp.c_str()) - 1;
 			break;
@@ -337,7 +338,7 @@ int Entity::act() {
 			for(int i = 0; temp[i] != '\0'; i++) {
 				temp[i] = tolower(temp[i]);
 			}
-			for (action = 0; action < 5; action++) {
+			for (action = 0; action < 7; action++) {
 				if (temp == DUNGEON_OPTIONS[action]) {
 					flag = 0;
 					break;
@@ -361,7 +362,9 @@ int Entity::act() {
 		item();
 	else if (action == 4)
 		info();
-	else if (action == 5){
+	else if (action == 5)
+		move();
+	else if (action == 6){
 		cooldown = 100;
 		return 0;
 	}
@@ -446,11 +449,71 @@ void Entity::attack() {
 
 void Entity::defend() {return;}
 
-void Entity::skill() {return;}
+void Entity::skill() {
+	skills[0](room->inRoom[0]);
+	cooldown = 20;
+}
 
 void Entity::item() {return;}
 
 void Entity::info() {return;}
+
+void Entity::move() {
+/*	Entity* ePtr;
+	int target, flag;
+	string temp;
+	do {
+		printf("Where does %s move?\n", name.c_str());
+		printf(" --------------------------------------\n");
+		for(int i = 0; i < 4; i++) {
+			if (room->doors[i] != NULL)
+				printf("| %5d %-20s |\n", i+1, DIRECTIONS[i].c_str());
+		}
+		printf(" --------------------------------------\n");
+		while(true) {
+			flag = 1;
+			printf(" >> ");
+			getline(cin, temp);
+			target = atoi(temp.c_str()) - 1;
+			if(target >= 0 && target < 4) { 
+				break;
+			} 
+			else {
+				for(int i = 0; temp[i] != '\0'; i++) {
+					temp[i] = tolower(temp[i]);
+				}
+				for (target = 0; target < 4; target++) {
+					if (temp == DIRECTIONS[target]) {
+						flag = 0;
+						break;
+					}
+				}
+				if(flag == 0) {
+					break;
+				}
+				if (target == 4){ //bad input
+					printf("I don't recognize that. Please try again.\n");
+				}
+			}
+		}
+	}while (target == 4);
+	room = room->doors[target];
+	for (int i = 0; i <= room->inRoom.size(); i++){
+		if (i == room->inRoom.size()){
+			room->inRoom.push_back(this);
+			break;
+		}
+		if (room->inRoom[i] == NULL){
+			room->inRoom[i] = this;
+		}
+	}
+	for (int i = 0; i < room->inRoom.size(); i++){
+		if (room->inRoom[i] == this){
+			room->inRoom[i] = NULL;
+		}
+	}*/
+	cooldown = 10;
+}
 
 void Entity::npcAttack() {
 	Entity* ePtr;
@@ -779,4 +842,19 @@ void Entity::skillTwo() {
 
 void Entity::skillThree() {
 
+}
+
+void coinFlip(Entity* ePtr){
+	if (rand()%2 == 1){
+		printf("Heads\n");
+		for (int i = 0; i < ePtr->room->inRoom.size(); i++)
+			if (ePtr->room->inRoom[i]->npc)
+				ePtr->room->inRoom[i]->cur_hp -= 5;
+	}
+	else{
+		printf("Tails\n");
+		for (int i = 0; i < ePtr->room->inRoom.size(); i++)
+			if (!ePtr->room->inRoom[i]->npc)
+				ePtr->room->inRoom[i]->cur_hp -= 5;
+	}
 }
