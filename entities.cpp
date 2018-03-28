@@ -160,6 +160,7 @@ void Entity::setUpChar(string n, byte r, byte c) {
 	level = 1;
 	name = n;
 	job.name = JOBS[c];
+	jobNum = c;
 
 	//if we end up doing alternate races, fix it here
 	species = "Human";
@@ -193,7 +194,21 @@ void Entity::setUpChar(string n, byte r, byte c) {
 		equipment["Torso"].type = "shirt";
 		equipment["Torso"].attack = 0;
 		equipment["Torso"].defence = 4;
-	} else { //light armor
+	}
+	else if (job.name == "gambler"){
+		equipment["Weapon"].name = "Dagger";
+		equipment["Weapon"].type = "edged weapon";
+		equipment["Weapon"].attack = 3;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Dandy's Blouse";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 2;
+		skills.push_back(coinFlip);
+		skills.push_back(multislash);
+		skills.push_back(diceBomb);
+	}
+	else { //light armor
 		equipment["Weapon"].name = "Small Pamphlet";
 		equipment["Weapon"].type = "magic paper";
 		equipment["Weapon"].attack = 4;
@@ -241,7 +256,6 @@ void Entity::generateChar() {
 	cooldown = 0;
 	//memcpy(attributes,RACEATTS[r],6);
 	setUpChar(name, 0, temp1);
-	skills.push_back(coinFlip);
 }
 
 void Entity::addEquipment(EquipItem a) {
@@ -450,8 +464,45 @@ void Entity::attack() {
 void Entity::defend() {return;}
 
 void Entity::skill() {
-	skills[0](room->inRoom[0]);
-	cooldown = 20;
+	Entity* ePtr;
+	int target, flag, strSize;
+	char charSize;
+	string temp;	
+	do {
+		printf("Which skill does %s use?\n", name.c_str());
+		printf(" --------------------------------------\n");
+		for(int i = 0; i < SKILLS[jobNum]; i++) {
+			printf("| %5d %-20s |\n", i+1, SKILL_LIST[jobNum][i].c_str());
+		}
+		printf(" --------------------------------------\n");
+		while(true) {
+			flag = 1;
+			printf(" >> ");
+			getline(cin, temp);
+			target = atoi(temp.c_str()) - 1;
+			if(target >= 0 && target < SKILLS[jobNum]) { 
+				break;
+			} 
+			else {
+				for(int i = 0; temp[i] != '\0'; i++) {
+					temp[i] = tolower(temp[i]);
+				}
+				for (target = 0; target < SKILLS[jobNum]; target++) {
+					if (temp == room->inRoom[target]->name) {
+						flag = 0;
+						break;
+					}
+				}
+				if(flag == 0) {
+					break;
+				}
+				if (target == SKILLS[jobNum]){ //bad input
+					printf("I don't recognize that. Please try again.\n");
+				}
+			}
+		}
+	}while (target == SKILLS[jobNum]);
+	skills[target](this);
 }
 
 void Entity::item() {return;}
@@ -845,16 +896,30 @@ void Entity::skillThree() {
 }
 
 void coinFlip(Entity* ePtr){
+	int payment;
+	do {
+		printf("How much gold do you pay to Weddench?\n >> ");
+		cin >> payment;
+		if (payment < 0 || payment > ePtr->cash)
+			printf("Invalid input");
+	} while (payment > ePtr->cash || payment < 0);
+	payment++;
 	if (rand()%2 == 1){
-		printf("Heads\n");
+		printf("Heads. You deal %d damage to all Enemies in this room\n", payment*5);
 		for (int i = 0; i < ePtr->room->inRoom.size(); i++)
 			if (ePtr->room->inRoom[i]->npc)
 				ePtr->room->inRoom[i]->cur_hp -= 5;
 	}
 	else{
-		printf("Tails\n");
-		for (int i = 0; i < ePtr->room->inRoom.size(); i++)
-			if (!ePtr->room->inRoom[i]->npc)
-				ePtr->room->inRoom[i]->cur_hp -= 5;
+		printf("Tails. You deal %d damage to yourself\n", payment*5);
+			ePtr->cur_hp -= 5;
 	}
+	ePtr->cooldown = 20;
+}
+
+void multislash(Entity* ePtr) {
+	return;
+}
+void diceBomb(Entity* ePtr) {
+	return;
 }
