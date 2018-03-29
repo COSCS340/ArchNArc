@@ -1,13 +1,19 @@
+
 Archary & Arcana
 Team Dungeonmaster
 Team Members: Michael Foust, Jonathan Redington, Ronald Randolph, and Michaela Shoffner
 
   Archery and Arcana has come a long way since the begining  of the semester. As of this report, we have most of the game sysytems in place, with only maps, navigation and skills left to implement. We are currently able to host an encounter with some generic deer. The player is able attack them and if they are a certain class, they can use skills. There were some issues with the multiplayer portion of the game, so we had to drop that functionality and stay single player. This will allow us to concentrate our remaining time and skill on giving the best possible experience with the trimmed-down single player, rather than resulting in a buggy or impractical multiplayer.
   The value to the customer hasn't changed significantly. We will still retain the core functionality of the game. However, Jonathan, the member heading up our multiplayer section, realized that adding in multiplayer functionality would take considerably more time than we could have devoted to it. As of now, we have also discarded text input and replaced it with a more traditional JRPG interface replicated within the text capabilities of the terminal. We had initially intended to allow the player to type commands such as "Attack the Dreaded Deer," but we decided that for ease of use and ease of coding to just make a user interface. The current user interface looks similar to this: 
+
 |  1 Attack                       |
+
 |  2 Defend                       |
+
 |  3 Skills                       |
+
 |  4 Item                         |
+
 |  5 Info                         |
 
 With the user simply selecting from a given option. A more free-form command typing will be used for exploration sections, but for combat we elected to keep things simple. We intend to port a version of this interface to other parts of the game. So far it is used in in an action selector, the tageting system, and the skill selector. We also opted to use a more traditional skill progression for characters instead of a branching skill tree. However, with the current system, we would be able to implement a branching skill tree relatively easy. In summary, our program is still relatively similar to our initial vision.
