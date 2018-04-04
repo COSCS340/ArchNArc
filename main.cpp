@@ -230,6 +230,8 @@ void makeDeer (Tile& room, vector <Entity>& inDungeon) {
 		ePtr->npc = 1;
 		ePtr->cooldown = 0;
 		ePtr->room = &room;
+		ePtr->illusion = NULL;
+		ePtr->defense = 0;
 		room.inRoom.push_back(ePtr);
 		inDungeon.push_back(*ePtr);
 	}

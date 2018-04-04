@@ -128,6 +128,8 @@ class Entity {
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
+		Entity* illusion;
+		int defense;
 		int act();
 		Tile* room;
 		void npcAttack();
@@ -136,7 +138,3 @@ class Entity {
 void setUpParty(Entity* party[]);
 
 bool comp (Entity*, Entity*);
-
-void coinFlip(Entity*);
-void multislash(Entity*);
-void diceBomb(Entity*);
