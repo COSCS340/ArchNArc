@@ -135,6 +135,8 @@ class Entity {
 
 void setUpParty(Entity* party[]);
 
+bool comp (Entity*, Entity*);
+
 void coinFlip(Entity*);
 void multislash(Entity*);
 void diceBomb(Entity*);

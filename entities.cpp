@@ -2,6 +2,7 @@
  * Author: collective effort of Team Archery and Arcana
  * Regrets: none
  */
+#include <algorithm>
 #include <iostream>
 #include <set>
 #include <cstdio>
@@ -394,7 +395,7 @@ void Entity::attack() {
 	do {
 		printf("Who does %s attack?\n", name.c_str());
 		printf(" --------------------------------------\n");
-		for(int i = 0; i < size; i++) {
+		for(int i = 0; i < size && room->inRoom[i] != NULL; i++) {
 			if (room->inRoom[i]->cur_hp < 1){
 				strSize = room->inRoom[i]->name.size();
 				room->inRoom[i]->name += " dead";
@@ -510,17 +511,17 @@ void Entity::item() {return;}
 void Entity::info() {return;}
 
 void Entity::move() {
-/*	Entity* ePtr;
+	Entity* ePtr;
 	int target, flag;
 	string temp;
 	do {
 		printf("Where does %s move?\n", name.c_str());
-		printf(" --------------------------------------\n");
+		printf(" ----------------------------\n");
 		for(int i = 0; i < 4; i++) {
 			if (room->doors[i] != NULL)
 				printf("| %5d %-20s |\n", i+1, DIRECTIONS[i].c_str());
 		}
-		printf(" --------------------------------------\n");
+		printf(" ----------------------------\n");
 		while(true) {
 			flag = 1;
 			printf(" >> ");
@@ -548,21 +549,25 @@ void Entity::move() {
 			}
 		}
 	}while (target == 4);
-	room = room->doors[target];
-	for (int i = 0; i <= room->inRoom.size(); i++){
-		if (i == room->inRoom.size()){
-			room->inRoom.push_back(this);
+	for (int i = 0; i <= room->doors[target]->inRoom.size(); i++){
+		if (i == room->doors[target]->inRoom.size()){
+			room->doors[target]->inRoom.push_back(this);
 			break;
 		}
-		if (room->inRoom[i] == NULL){
-			room->inRoom[i] = this;
+		if (room->doors[target]->inRoom[i] == NULL){
+			room->doors[target]->inRoom[i] = this;
+			break;
 		}
 	}
 	for (int i = 0; i < room->inRoom.size(); i++){
-		if (room->inRoom[i] == this){
+		if (room->inRoom[i]->name == name){
 			room->inRoom[i] = NULL;
+			break;
 		}
-	}*/
+	}
+	sort(room->inRoom.begin(), room->inRoom.end(), comp);
+	room = room->doors[target];
+	sort(room->inRoom.begin(), room->inRoom.end(), comp);
 	cooldown = 10;
 }
 
@@ -571,7 +576,7 @@ void Entity::npcAttack() {
 	if (npc == 1){
 		int target = rand()%room->inRoom.size();
 		ePtr = room->inRoom[target];
-		while (ePtr->name == name){
+		while (ePtr->name == name || ePtr == NULL){
 			target = rand()%room->inRoom.size();
 			ePtr = room->inRoom[target];
 		}
@@ -895,6 +900,15 @@ void Entity::skillThree() {
 
 }
 
+bool comp (Entity* ePtr1, Entity* ePtr2){
+	if (ePtr1 == NULL)
+		return false;
+	else if (ePtr2 == NULL)
+		return true;
+	else
+		return ePtr1->attributes[2] < ePtr2->attributes[2];
+}
+
 void coinFlip(Entity* ePtr){
 	int payment;
 	do {
@@ -903,10 +917,11 @@ void coinFlip(Entity* ePtr){
 		if (payment < 0 || payment > ePtr->cash)
 			printf("Invalid input");
 	} while (payment > ePtr->cash || payment < 0);
+	ePtr->cash -= payment;
 	payment++;
 	if (rand()%2 == 1){
 		printf("Heads. You deal %d damage to all Enemies in this room\n", payment*5);
-		for (int i = 0; i < ePtr->room->inRoom.size(); i++)
+		for (int i = 0; i < ePtr->room->inRoom.size() && ePtr->room->inRoom[i] != NULL; i++)
 			if (ePtr->room->inRoom[i]->npc)
 				ePtr->room->inRoom[i]->cur_hp -= payment*5;
 	}
@@ -925,7 +940,7 @@ void multislash(Entity* ePtr) {
 	do {
 		printf("Who does %s attack?\n", ePtr->name.c_str());
 		printf(" --------------------------------------\n");
-		for(int i = 0; i < size; i++) {
+		for(int i = 0; i < size && ePtr->room->inRoom[i] != NULL; i++) {
 			if (ePtr->room->inRoom[i]->cur_hp < 1){
 				strSize = ePtr->room->inRoom[i]->name.size();
 				ePtr->room->inRoom[i]->name += " dead";
@@ -974,6 +989,7 @@ void multislash(Entity* ePtr) {
 		if (payment < 0 || payment > ePtr->cash)
 			printf("Invalid input");
 	} while (payment > ePtr->cash || payment < 0);
+	ePtr->cash -= payment;
 	if (payment > 5){
 		payment -= 5;
 		strikes = 5;
@@ -1024,6 +1040,7 @@ void diceBomb(Entity* ePtr) {
 		if (payment < 0 || payment > ePtr->cash)
 			printf("Invalid input");
 	} while (payment > ePtr->cash || payment < 0);
+	ePtr->cash -= payment;
 	roll = rand()%20;
 	if (roll == 0){
 		ePtr->cur_hp -= 10;
@@ -1032,7 +1049,7 @@ void diceBomb(Entity* ePtr) {
 	}
 	if (roll == 19){
 		printf("You hear laughter as Weddench smites your foes.\n");
-		for (int i = 0; i < ePtr->room->inRoom.size(); i++){
+		for (int i = 0; i < ePtr->room->inRoom.size() && ePtr->room->inRoom[i] != NULL; i++){
 			if (ePtr->room->inRoom[i]->npc){
 				ePtr->room->inRoom[i]->cur_hp = 0;
 				ePtr->room->inRoom[i]->cooldown = 100;
