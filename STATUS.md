@@ -1,15 +1,24 @@
+
 Archary & Arcana
 Team Dungeonmaster
 Team Members: Michael Foust, Jonathan Redington, Ronald Randolph, and Michaela Shoffner
 
-intro - what we've done, what has changed since proposal, etc.
+  Archery and Arcana has come a long way since the begining  of the semester. As of this report, we have most of the game sysytems in place, with only maps, navigation and skills left to implement. We are currently able to host an encounter with some generic deer. The player is able attack them and if they are a certain class, they can use skills. There were some issues with the multiplayer portion of the game, so we had to drop that functionality and stay single player. This will allow us to concentrate our remaining time and skill on giving the best possible experience with the trimmed-down single player, rather than resulting in a buggy or impractical multiplayer.
+  The value to the customer hasn't changed significantly. We will still retain the core functionality of the game. However, Jonathan, the member heading up our multiplayer section, realized that adding in multiplayer functionality would take considerably more time than we could have devoted to it. As of now, we have also discarded text input and replaced it with a more traditional JRPG interface replicated within the text capabilities of the terminal. We had initially intended to allow the player to type commands such as "Attack the Dreaded Deer," but we decided that for ease of use and ease of coding to just make a user interface. The current user interface looks similar to this: 
 
-Customer value - what was changed (in more depth), functionality, why what was changed was changed
+|  1 Attack                       |
 
-Technology - what tech we used, what were our goals for the current iteration, what tests have been run, goals for next iteration
+|  2 Defend                       |
 
-Team - what contributions who has made, what roles we had, what roles we have going forward
+|  3 Skills                       |
 
-Project management - are we on schedule, how has the schedule changed since beginning, any managerial issues
+|  4 Item                         |
 
-General reflection - what went well, what didn't go well, what have we learned, what might we do differently, etc
+|  5 Info                         |
+
+With the user simply selecting from a given option. A more free-form command typing will be used for exploration sections, but for combat we elected to keep things simple. We intend to port a version of this interface to other parts of the game. So far it is used in in an action selector, the tageting system, and the skill selector. We also opted to use a more traditional skill progression for characters instead of a branching skill tree. However, with the current system, we would be able to implement a branching skill tree relatively easy. In summary, our program is still relatively similar to our initial vision.
+  We also have mostly finished with our character functions. It is currently capable of saving and loading characters to re-use next time you play, and the user has the ability to either create their own customized characters, or simply use a procedurally generated one, if they want something a little more random.
+  So far, the only tech we have used are the Hydra machines and GitHub. Our goal is to at least have a functional RPG system coded which will lend itself to the easy creation of a game. There are several bugs within the program which we have not squashed yet. The small battle that we have running now will occasionaly crash giving us a segmentation fault. This will need to be fixed eventually, but it is not the most important right now. We also need to come up with a better system for damage calculation. Most testing thus far has featured one or more of us simply trying many different things with the new feature, and seeing if it behaves as expected.
+  The division of labor has gone relatively peacefully. While we are not always great about using the issues tracker on Github, we keep in good contact with each other and there has been no serious disputes or miscommunications. We have kept everything fairly modular and function-centered, and this helps us to be able to divide effort and keep out of each other's way while making contributions. Each of us has done a good share of new code prototyping, improvements, and testing, and mostly harmonious coexistance has been achieved. Going forward, we'll continue to discuss general future plans with each other frequently, and will keep it clear on what everyone is expected to contribute.
+  For what we are doing, I beleive we are on schedule. We had initially planned to have a working skeleton by the end of two weeks, but this plan fell through as we realized how daunting this task would be. We now hope to have the starting area coded up and playable by the end of the semester, as well as fleshed-out character class options and abilities. These goals will be achievable so long as we consistently work on this program.
+  We have discovered that making a game is a lot harder than many of us had at first thought. This experience has given us a new respect for those who have made this their career. While everything might not have gone exactly as we thought it would, it has been a great learning experience. If we could have started fom the begining of the semester again, I doubt we would do anything differently.
