@@ -2,6 +2,7 @@
  * Author: collective effort of Team Archery and Arcana
  * Regrets: none
  */
+#include <algorithm>
 #include <iostream>
 #include <set>
 #include <cstdio>
@@ -11,11 +12,12 @@
 //#include "anaParser.h"
 #include "entities.h"
 #include "fields.h"
+#include "skills.h"
 
-const string pos_names[] = {"Manaliabrid", "Osfameron", "Deryn", "Brutha", "Anevka", "Enoch", "Sandrilene", "Theophrastus", "Hazel", "Kevin", "Gladys", "Anatolio", "Lyseria", "Bob", "Azula", "Krauss", "Amakusa", "Rudolph", "Adara", "Janus", "Aeronwen", "Keichi", "Branwen", "Alwyn", "Dwynwen", "Cadfael", "Hywela", "Emlyn", "Maelona", "Gwalchgwyn", "Nerys", "Idris", "Sioned", "Llywellyn", "Yseult","Leimu","Yukari","Marisa","Aya"};
-const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader", " the Incompetent", " the Flautist", " the Sleep-Deprived", " the Tennessean", " the Overlord", " the Hatter", " the Sunseeker", " the Fluffy", " the Timejumper", " the Darwinist", " the Mentor", " the Lucky", " the Left-Footed", " the Ace", " the Stingy", " the Executioner", " the Fraudulent", " the NPC", " the Hopeful", " the Morbid", " the Bemused", " the Concerned", " the Unworthy", " the Tree-Hugger", " the Earthbound", " the Oblivious", " the Immortal", " the Mortal", " the Corrupted", " the Pessimist", " the Seg-Fault", " the Silent", " the Clothed", " the Paranoid", " the Caffeinated", " the Lost", " the Error", " the Conspirator", " the Punctual", " the Liar", " the Felon", " the Ignoble", " the Mispronounced", " the Righteous", " the Blasphemous"};
-const int NUM_NAMES = 38;
-const int NUM_TITLES = 48;
+const string pos_names[] = {"Manaliabrid", "Osfameron", "Deryn", "Brutha", "Anevka", "Enoch", "Sandrilene", "Theophrastus", "Hazel", "Kevin", "Gladys", "Anatolio", "Lyseria", "Bob", "Azula", "Krauss", "Amakusa", "Rudolph", "Adara", "Janus", "Aeronwen", "Keichi", "Branwen", "Alwyn", "Dwynwen", "Cadfael", "Hywela", "Emlyn", "Maelona", "Gwalchgwyn", "Nerys", "Idris", "Sioned", "Llywellyn", "Yseult", "Leimu", "Yukari", "Marisa", "Aya", "Jenga", "Califaan", "STEVE"};
+const string pos_titles[] = {" the Foolhardy", " the Cowardly", " the Crusader", " the Incompetent", " the Flautist", " the Sleep-Deprived", " the Tennessean", " the Overlord", " the Hatter", " the Sunseeker", " the Fluffy", " the Timejumper", " the Darwinist", " the Mentor", " the Lucky", " the Left-Footed", " the Ace", " the Stingy", " the Executioner", " the Fraudulent", " the NPC", " the Hopeful", " the Morbid", " the Bemused", " the Concerned", " the Unworthy", " the Tree-Hugger", " the Earthbound", " the Oblivious", " the Immortal", " the Mortal", " the Corrupted", " the Pessimist", " the Seg-Fault", " the Silent", " the Clothed", " the Paranoid", " the Caffeinated", " the Lost", " the Error", " the Conspirator", " the Punctual", " the Liar", " the Felon", " the Ignoble", " the Mispronounced", " the Righteous", " the Blasphemous", " the Bane of Existence"};
+const int NUM_NAMES = 41;
+const int NUM_TITLES = 49;
 
 void setUpParty(Entity* party[]) {
 	int place = 0;
@@ -56,7 +58,7 @@ void setUpParty(Entity* party[]) {
 				flag = 1;
 				printf(" >> ");
 				getline(cin, temp);
-				if(temp[0] >= '1' && temp[0] <= '6') { //note: change second item to however many classes we end up having
+				if(temp[0] >= '1' && temp[0] <= '8') { //note: change second item to however many classes we end up having
 					temp[1] = '\0';
 					classNum = atoi(temp.c_str()) - 1;
 					break;
@@ -160,6 +162,7 @@ void Entity::setUpChar(string n, byte r, byte c) {
 	level = 1;
 	name = n;
 	job.name = JOBS[c];
+	jobNum = c;
 
 	//if we end up doing alternate races, fix it here
 	species = "Human";
@@ -174,6 +177,8 @@ void Entity::setUpChar(string n, byte r, byte c) {
 	attributes[4] = 10;
 	attributes[5] = 10;
     //memcpy(attributes,RACEATTS[r],6);
+	illusion = NULL;
+	defense = 0;
 
 	if(job.name == "fightard" || job.name == "anime kid") { //medium armor
 		equipment["Weapon"].name = "Dagger";
@@ -193,7 +198,30 @@ void Entity::setUpChar(string n, byte r, byte c) {
 		equipment["Torso"].type = "shirt";
 		equipment["Torso"].attack = 0;
 		equipment["Torso"].defence = 4;
-	} else { //light armor
+	}
+	else if (job.name == "gambler"){
+		equipment["Weapon"].name = "Dagger";
+		equipment["Weapon"].type = "edged weapon";
+		equipment["Weapon"].attack = 3;
+		equipment["Weapon"].defence = 0;
+		equipment["Torso"].name = "Dandy's Blouse";
+		equipment["Torso"].type = "shirt";
+		equipment["Torso"].attack = 0;
+		equipment["Torso"].defence = 2;
+		skills.push_back(coinFlip);
+		skills.push_back(multislash);
+		skills.push_back(diceBomb);
+	}
+	else if (job.name == "Illusionist"){
+		equipment["Weapon"].name = "Magic for Dummies";
+		equipment["Weapon"].type = "magic paper";
+		equipment["Weapon"].attack = 4;
+		equipment["Weapon"].defence = 0;
+		skills.push_back(nightmare);
+		skills.push_back(tai);
+		skills.push_back(illStrength);
+	}
+	else { //light armor
 		equipment["Weapon"].name = "Small Pamphlet";
 		equipment["Weapon"].type = "magic paper";
 		equipment["Weapon"].attack = 4;
@@ -284,6 +312,37 @@ void Entity::listAttributes() {
 }
 
 int Entity::tick (int tFactor) {
+	if (illusion != NULL){
+		cout << "ill" << endl;
+		int mag, res;
+		if (illusion->name == "tai"){
+			int mag = rand()%illusion->illusion->attributes[2];
+			if (attributes[4] != 0)
+				int res = rand()%attributes[4];
+			else 
+				res = 0;
+			if (mag > res){
+				if (cooldown < tFactor)
+					cooldown = 0;
+				else
+					cooldown -= tFactor;
+				if (cooldown == 0){
+					int c = illusion->illusion->cooldown;
+					illusion->illusion->act();
+					cooldown = illusion->illusion->cooldown;
+					illusion->illusion->cooldown = c;
+					delete illusion;
+					illusion = NULL;
+				}
+				return 1;
+			}
+			else {
+				printf("%s breaks %s's illusion.\n", name.c_str(), illusion->illusion->name.c_str());
+				delete illusion;
+				illusion = NULL;
+			}
+		}
+	}
 	if (npc){
 		if (cooldown < tFactor)
 			cooldown = 0;
@@ -294,9 +353,12 @@ int Entity::tick (int tFactor) {
 				cur_hp = max_hp;
 				cooldown = 50;
 			}
-			else
-				if (rand()%10000 == 9999)
+			else {
+				if (rand()%100000 == 99999){
 					cur_hp = max_hp;
+					cooldown = 0;
+				}
+			}
 		}
 		if (cooldown == 0)
 			npcAttack();
@@ -320,7 +382,7 @@ int Entity::act() {
 	string temp;
 	printf("What should %s do?\n", name.c_str());
 	printf(" ----------------------------\n");
-	for(int i = 0; i < 5; i++) {
+	for(int i = 0; i < 7; i++) {
 		printf("| %5d %-20s |\n", i+1, DUNGEON_OPTIONS[i].c_str());
 	}
 	printf(" ----------------------------\n");
@@ -328,7 +390,7 @@ int Entity::act() {
 		flag = 1;
 		printf(" >> ");
 		getline(cin, temp);
-		if(temp[0] >= '1' && temp[0] <= '6') { 
+		if(temp[0] >= '1' && temp[0] <= '7') { 
 			temp[1] = '\0';
 			action = atoi(temp.c_str()) - 1;
 			break;
@@ -337,7 +399,7 @@ int Entity::act() {
 			for(int i = 0; temp[i] != '\0'; i++) {
 				temp[i] = tolower(temp[i]);
 			}
-			for (action = 0; action < 5; action++) {
+			for (action = 0; action < 7; action++) {
 				if (temp == DUNGEON_OPTIONS[action]) {
 					flag = 0;
 					break;
@@ -346,7 +408,7 @@ int Entity::act() {
 			if(flag == 0) {
 				break;
 			}
-			if (action == 5){ //bad input
+			if (action == 6){ //bad input
 				printf("I don't recognize that. Please try again.\n");
 			}
 		}
@@ -362,7 +424,11 @@ int Entity::act() {
 	else if (action == 4)
 		info();
 	else if (action == 5)
+		move();
+	else if (action == 6){
+		cooldown = 100;
 		return 0;
+	}
 	return 1;
 }
 
@@ -375,7 +441,7 @@ void Entity::attack() {
 	do {
 		printf("Who does %s attack?\n", name.c_str());
 		printf(" --------------------------------------\n");
-		for(int i = 0; i < size; i++) {
+		for(int i = 0; i < size && room->inRoom[i] != NULL; i++) {
 			if (room->inRoom[i]->cur_hp < 1){
 				strSize = room->inRoom[i]->name.size();
 				room->inRoom[i]->name += " dead";
@@ -437,25 +503,130 @@ void Entity::attack() {
 	if (ePtr->cur_hp < 1){
 		printf("%s has died.\n", ePtr->name.c_str());
 		ePtr->cooldown = 100;
+		delete ePtr->illusion;
+		ePtr->illusion = NULL;
 	}
-	
 	cooldown = 10;
 }
 
-void Entity::defend() {return;}
+void Entity::defend() {
+	defense = attributes[5]*2;
+	cooldown = 5;
+}
 
-void Entity::skill() {return;}
+void Entity::skill() {
+	Entity* ePtr;
+	int target, flag, strSize;
+	char charSize;
+	string temp;	
+	do {
+		printf("Which skill does %s use?\n", name.c_str());
+		printf(" ----------------------------\n");
+		for(int i = 0; i < SKILLS[jobNum]; i++) {
+			printf("| %5d %-20s |\n", i+1, SKILL_LIST[jobNum][i].c_str());
+		}
+		printf(" ----------------------------\n");
+		while(true) {
+			flag = 1;
+			printf(" >> ");
+			getline(cin, temp);
+			target = atoi(temp.c_str()) - 1;
+			if(target >= 0 && target < SKILLS[jobNum]) { 
+				break;
+			} 
+			else {
+				for(int i = 0; temp[i] != '\0'; i++) {
+					temp[i] = tolower(temp[i]);
+				}
+				for (target = 0; target < SKILLS[jobNum]; target++) {
+					if (temp == room->inRoom[target]->name) {
+						flag = 0;
+						break;
+					}
+				}
+				if(flag == 0) {
+					break;
+				}
+				if (target == SKILLS[jobNum]){ //bad input
+					printf("I don't recognize that. Please try again.\n");
+				}
+			}
+		}
+	}while (target == SKILLS[jobNum]);
+	skills[target](this);
+}
 
 void Entity::item() {return;}
 
 void Entity::info() {return;}
+
+void Entity::move() {
+	Entity* ePtr;
+	int target, flag;
+	string temp;
+	do {
+		printf("Where does %s move?\n", name.c_str());
+		printf(" ----------------------------\n");
+		for(int i = 0; i < 4; i++) {
+			if (room->doors[i] != NULL)
+				printf("| %5d %-20s |\n", i+1, DIRECTIONS[i].c_str());
+		}
+		printf(" ----------------------------\n");
+		while(true) {
+			flag = 1;
+			printf(" >> ");
+			getline(cin, temp);
+			target = atoi(temp.c_str()) - 1;
+			if(target >= 0 && target < 4) { 
+				break;
+			} 
+			else {
+				for(int i = 0; temp[i] != '\0'; i++) {
+					temp[i] = tolower(temp[i]);
+				}
+				for (target = 0; target < 4; target++) {
+					if (temp == DIRECTIONS[target]) {
+						flag = 0;
+						break;
+					}
+				}
+				if(flag == 0) {
+					break;
+				}
+				if (target == 4){ //bad input
+					printf("I don't recognize that. Please try again.\n");
+				}
+			}
+		}
+	}while (target == 4);
+	for (int i = 0; i <= room->doors[target]->inRoom.size(); i++){
+		if (i == room->doors[target]->inRoom.size()){
+			room->doors[target]->inRoom.push_back(this);
+			break;
+		}
+		if (room->doors[target]->inRoom[i] == NULL){
+			room->doors[target]->inRoom[i] = this;
+			break;
+		}
+	}
+	for (int i = 0; i < room->inRoom.size(); i++){
+		if (room->inRoom[i]->name == name){
+			room->inRoom[i] = NULL;
+			break;
+		}
+	}
+	sort(room->inRoom.begin(), room->inRoom.end(), comp);
+	room = room->doors[target];
+	sort(room->inRoom.begin(), room->inRoom.end(), comp);
+	cooldown = 10;
+}
 
 void Entity::npcAttack() {
 	Entity* ePtr;
 	if (npc == 1){
 		int target = rand()%room->inRoom.size();
 		ePtr = room->inRoom[target];
-		while (ePtr->name == name){
+		while (ePtr->name == name || ePtr == NULL){
 			target = rand()%room->inRoom.size();
 			ePtr = room->inRoom[target];
 		}
@@ -468,9 +639,19 @@ void Entity::npcAttack() {
 		}
 		check = rand()%attributes[1];
 		check -= rand()%ePtr->attributes[5];
-		check *= 2;
 		if (check < 0)
 			check = 0;
+		else if (ePtr->defense > 0){
+			if (check < ePtr->defense){
+				ePtr->defense -= check;
+				check = 0;
+			}
+			else {
+				check -= ePtr->defense;
+				ePtr->defense = 0;
+			}
+		}
+		check *= 2;
 		printf("%s deals %d damage.\n", name.c_str(), check);
 		ePtr->cur_hp -= check;
 		if (ePtr->cur_hp < 1)
@@ -777,4 +958,13 @@ void Entity::skillTwo() {
 
 void Entity::skillThree() {
 
+}
+
+bool comp (Entity* ePtr1, Entity* ePtr2){
+	if (ePtr1 == NULL)
+		return false;
+	else if (ePtr2 == NULL)
+		return true;
+	else
+		return ePtr1->attributes[2] < ePtr2->attributes[2];
 }

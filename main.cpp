@@ -175,13 +175,15 @@ byte cterm() {
 void handler (Entity* party[]) {
 	int running = 1;
 	vector<Entity> inDungeon;
-	Tile room;
+	Tile room1, room2;
+	room1.doors[0] = &room2;
+	room2.doors[2] = &room1;
 	for (int i = 0; i < 7; i++){
-		party[i]->room = &room;
+		party[i]->room = &room1;
 		inDungeon.push_back(*party[i]);
-		room.inRoom.push_back(party[i]);
+		room1.inRoom.push_back(party[i]);
 	}
-	makeDeer(room, inDungeon);
+	makeDeer(room1, inDungeon);
 	sort(inDungeon.begin(), inDungeon.end());
 	int tFactor;
     while(running == 1){
@@ -228,6 +230,8 @@ void makeDeer (Tile& room, vector <Entity>& inDungeon) {
 		ePtr->npc = 1;
 		ePtr->cooldown = 0;
 		ePtr->room = &room;
+		ePtr->illusion = NULL;
+		ePtr->defense = 0;
 		room.inRoom.push_back(ePtr);
 		inDungeon.push_back(*ePtr);
 	}
