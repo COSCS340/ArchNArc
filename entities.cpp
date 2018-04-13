@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cctype>
 #include <string>
+#include <utility>
 //#include "anaParser.h"
 #include "entities.h"
 #include "fields.h"
@@ -313,9 +314,10 @@ void Entity::listAttributes() {
 
 int Entity::tick (int tFactor) {
 	if (illusion != NULL){
-		cout << "ill" << endl;
+		cout << "working" << endl;
 		int mag, res;
 		if (illusion->name == "tai"){
+			cout << "Working" << endl;
 			int mag = rand()%illusion->illusion->attributes[2];
 			if (attributes[4] != 0)
 				int res = rand()%attributes[4];
@@ -437,7 +439,7 @@ void Entity::attack() {
 	int target, size, flag, strSize;
 	char charSize;
 	string temp;
-	size = room->inRoom.size();	
+	size = room->inRoom.size();
 	do {
 		printf("Who does %s attack?\n", name.c_str());
 		printf(" --------------------------------------\n");
@@ -567,9 +569,8 @@ void Entity::move() {
 	do {
 		printf("Where does %s move?\n", name.c_str());
 		printf(" ----------------------------\n");
-		for(int i = 0; i < 4; i++) {
-			if (room->doors[i] != NULL)
-				printf("| %5d %-20s |\n", i+1, DIRECTIONS[i].c_str());
+		for(int i = 0; i < room->door.size(); i++) {
+			printf("| %5d %-20s |\n", i+1, room->door[i].second.c_str());
 		}
 		printf(" ----------------------------\n");
 		while(true) {
@@ -577,35 +578,20 @@ void Entity::move() {
 			printf(" >> ");
 			getline(cin, temp);
 			target = atoi(temp.c_str()) - 1;
-			if(target >= 0 && target < 4) { 
+			if(target >= 0 && target < room->door.size()) { 
 				break;
 			} 
-			else {
-				for(int i = 0; temp[i] != '\0'; i++) {
-					temp[i] = tolower(temp[i]);
-				}
-				for (target = 0; target < 4; target++) {
-					if (temp == DIRECTIONS[target]) {
-						flag = 0;
-						break;
-					}
-				}
-				if(flag == 0) {
-					break;
-				}
-				if (target == 4){ //bad input
-					printf("I don't recognize that. Please try again.\n");
-				}
-			}
+			else //bad input
+				printf("I don't recognize that. Please try again.\n");
 		}
-	}while (target == 4);
-	for (int i = 0; i <= room->doors[target]->inRoom.size(); i++){
-		if (i == room->doors[target]->inRoom.size()){
-			room->doors[target]->inRoom.push_back(this);
+	}while (target < 0 || target > room->door.size());
+	for (int i = 0; i <= room->door[target].first->inRoom.size(); i++){
+		if (i == room->door[target].first->inRoom.size()){
+			room->door[target].first->inRoom.push_back(this);
 			break;
 		}
-		if (room->doors[target]->inRoom[i] == NULL){
-			room->doors[target]->inRoom[i] = this;
+		if (room->door[target].first->inRoom[i] == NULL){
+			room->door[target].first->inRoom[i] = this;
 			break;
 		}
 	}
@@ -616,7 +602,7 @@ void Entity::move() {
 		}
 	}
 	sort(room->inRoom.begin(), room->inRoom.end(), comp);
-	room = room->doors[target];
+	room = room->door[target].first;
 	sort(room->inRoom.begin(), room->inRoom.end(), comp);
 	cooldown = 10;
 }
@@ -967,4 +953,11 @@ bool comp (Entity* ePtr1, Entity* ePtr2){
 		return true;
 	else
 		return ePtr1->attributes[2] < ePtr2->attributes[2];
+}
+
+void Entity::makeIll (string name) {
+	if (name == "tai"){
+		illusion = new Entity;
+		illusion->name = name;
+	}
 }

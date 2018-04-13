@@ -16,10 +16,10 @@ typedef unsigned char byte;
 byte cinit();
 byte crun();
 byte cterm();
-bool playerInDungeon(vector<Entity>&);
+bool playerInDungeon(Entity*[]);
 bool inBattle(Entity*[]);
 void handler(Entity*[]);
-void makeDeer (Tile&, vector<Entity>&);
+void makeMines(Area&);
 
 int spid; // PID of the server, only set to non-zero if this is the client that launched the server
 
@@ -174,27 +174,24 @@ byte cterm() {
 
 void handler (Entity* party[]) {
 	int running = 1;
-	vector<Entity> inDungeon;
-	Tile room1, room2;
-	room1.doors[0] = &room2;
-	room2.doors[2] = &room1;
+	Area mines;
+	makeMines(mines);
 	for (int i = 0; i < 7; i++){
-		party[i]->room = &room1;
-		inDungeon.push_back(*party[i]);
-		room1.inRoom.push_back(party[i]);
+		party[i]->room = mines.mapOfArea[0];
+		mines.mapOfArea[0]->inRoom.push_back(party[i]);
+		mines.inDungeon.push_back(party[i]);
 	}
-	makeDeer(room1, inDungeon);
-	sort(inDungeon.begin(), inDungeon.end());
+	sort(mines.inDungeon.begin(), mines.inDungeon.end(), comp);
 	int tFactor;
     while(running == 1){
 		tFactor = 100;
-		if (playerInDungeon(inDungeon)){
-			if (inBattle(party)){
-				tFactor = 1;}
+		if (playerInDungeon(party)){
+			if (inBattle(party))
+				tFactor = 1;
 			else
 				tFactor = 10;
-			for (size_t i = 0; i < inDungeon.size(); i++){
-				running = inDungeon[i].tick(tFactor);
+			for (size_t i = 0; i < mines.inDungeon.size(); i++){
+				running = mines.inDungeon[i]->tick(tFactor);
 				if (running == 0)
 					break;
 			}
@@ -202,49 +199,72 @@ void handler (Entity* party[]) {
     }
 }
 
-bool playerInDungeon(vector <Entity>& sEntity) {
-	/*for (size_t i = 0; i < sEntity.size(); i++){cout << "pid" << endl;
-		if (!sEntity[i].npc)
+bool playerInDungeon(Entity* party[]) {
+	for (int i = 0; i < 7; i++){
+		if (party[i]->room != NULL)
 			return true;
-	}*/
-	return true;
+	}
+	return false;
 }
 
-void makeDeer (Tile& room, vector <Entity>& inDungeon) {
-	for (int i = 0; i < 5; i++){
-		Entity* ePtr = new Entity;
-		ePtr->name = "DREADED DEER ";
-		for (int j = 0; j < i; j++)
-			ePtr->name += "A";
-		ePtr->attributes = (byte*)malloc(6);
-		ePtr->max_mp = ePtr->cur_mp = 0;
-		ePtr->attributes[0] = rand()%5000;
-		ePtr->attributes[1] = rand()%15;
-		ePtr->attributes[2] = 0;
-		ePtr->attributes[3] = rand()%20;
-		ePtr->attributes[4] = 0;
-		ePtr->attributes[5] = rand()%20;
-		if (ePtr->attributes[5] < 10)
-			ePtr->attributes[5] = 10;
-		ePtr->max_hp = ePtr->cur_hp = ePtr->attributes[5]*2;
-		ePtr->npc = 1;
-		ePtr->cooldown = 0;
-		ePtr->room = &room;
-		ePtr->illusion = NULL;
-		ePtr->defense = 0;
-		room.inRoom.push_back(ePtr);
-		inDungeon.push_back(*ePtr);
+void makeMines (Area& mines) {
+	mines.name = "Mines of Michaela";
+	for (int i = 0; i < 17; i++){
+		mines.mapOfArea.push_back(new Tile);
+		mines.mapOfArea[i]->zone = &mines;
 	}
+	mines.mapOfArea[0]->door.push_back(make_pair(mines.mapOfArea[1], "West"));
+	mines.mapOfArea[1]->door.push_back(make_pair(mines.mapOfArea[0], "East"));
+	mines.mapOfArea[1]->door.push_back(make_pair(mines.mapOfArea[2], "South"));
+	mines.mapOfArea[2]->door.push_back(make_pair(mines.mapOfArea[1], "North"));
+	mines.mapOfArea[2]->door.push_back(make_pair(mines.mapOfArea[3], "South by Southeast"));
+	mines.mapOfArea[2]->door.push_back(make_pair(mines.mapOfArea[4], "Southwest"));
+	mines.mapOfArea[2]->door.push_back(make_pair(mines.mapOfArea[5], "Northwest"));
+	mines.mapOfArea[3]->door.push_back(make_pair(mines.mapOfArea[2], "North by Northwest"));
+	mines.mapOfArea[4]->door.push_back(make_pair(mines.mapOfArea[2], "Northeast"));
+	mines.mapOfArea[4]->door.push_back(make_pair(mines.mapOfArea[5], "North"));
+	mines.mapOfArea[4]->door.push_back(make_pair(mines.mapOfArea[6], "Northwest"));
+	mines.mapOfArea[5]->door.push_back(make_pair(mines.mapOfArea[2], "Southeast"));
+	mines.mapOfArea[5]->door.push_back(make_pair(mines.mapOfArea[7], "Northeast"));
+	mines.mapOfArea[5]->door.push_back(make_pair(mines.mapOfArea[6], "South"));
+	mines.mapOfArea[5]->door.push_back(make_pair(mines.mapOfArea[4], "South by Southeast"));
+	mines.mapOfArea[6]->door.push_back(make_pair(mines.mapOfArea[4], "Southeast"));
+	mines.mapOfArea[6]->door.push_back(make_pair(mines.mapOfArea[5], "North"));
+	mines.mapOfArea[6]->door.push_back(make_pair(mines.mapOfArea[8], "West"));
+	mines.mapOfArea[6]->door.push_back(make_pair(mines.mapOfArea[10], "North by Northwest"));
+	mines.mapOfArea[7]->door.push_back(make_pair(mines.mapOfArea[9], "South"));
+	mines.mapOfArea[7]->door.push_back(make_pair(mines.mapOfArea[5], "Southwest"));
+	mines.mapOfArea[8]->door.push_back(make_pair(mines.mapOfArea[6], "East"));
+	mines.mapOfArea[8]->door.push_back(make_pair(mines.mapOfArea[10], "North by Northeast"));
+	mines.mapOfArea[9]->door.push_back(make_pair(mines.mapOfArea[7], "North"));
+	mines.mapOfArea[10]->door.push_back(make_pair(mines.mapOfArea[11], "Southwest"));
+	mines.mapOfArea[10]->door.push_back(make_pair(mines.mapOfArea[8], "South by Southwest"));
+	mines.mapOfArea[10]->door.push_back(make_pair(mines.mapOfArea[6], "South by Southeast"));
+	mines.mapOfArea[10]->door.push_back(make_pair(mines.mapOfArea[12], "North by Northwest"));
+	mines.mapOfArea[10]->door.push_back(make_pair(mines.mapOfArea[13], "Northeast"));
+	mines.mapOfArea[10]->door.push_back(make_pair(mines.mapOfArea[14], "North"));
+	mines.mapOfArea[11]->door.push_back(make_pair(mines.mapOfArea[10], "Northest"));
+	mines.mapOfArea[12]->door.push_back(make_pair(mines.mapOfArea[10], "South by Southeast"));
+	mines.mapOfArea[12]->door.push_back(make_pair(mines.mapOfArea[13], "Southeast"));
+	mines.mapOfArea[12]->door.push_back(make_pair(mines.mapOfArea[14], "Southeast"));
+	mines.mapOfArea[13]->door.push_back(make_pair(mines.mapOfArea[10], "Southwest"));
+	mines.mapOfArea[13]->door.push_back(make_pair(mines.mapOfArea[12], "Northwest"));
+	mines.mapOfArea[13]->door.push_back(make_pair(mines.mapOfArea[14], "Northwest"));
+	mines.mapOfArea[14]->door.push_back(make_pair(mines.mapOfArea[10], "South"));
+	mines.mapOfArea[14]->door.push_back(make_pair(mines.mapOfArea[12], "Northwest"));
+	mines.mapOfArea[14]->door.push_back(make_pair(mines.mapOfArea[13], "Southeast"));
+	mines.mapOfArea[14]->door.push_back(make_pair(mines.mapOfArea[15], "East"));
+	mines.mapOfArea[14]->door.push_back(make_pair(mines.mapOfArea[16], "East by Northeast"));
+	mines.mapOfArea[15]->door.push_back(make_pair(mines.mapOfArea[14], "West"));
+	mines.mapOfArea[16]->door.push_back(make_pair(mines.mapOfArea[14], "West by Southwest"));
 }
 
 bool inBattle (Entity* party[]) {
-	/*for (int i = 0; i < 7; i++){
-		cout << "ib l1" << endl;
+	for (int i = 0; i < 7; i++){
 		for (int j = 0; j < party[i]->room->inRoom.size(); j++){
-			cout << "ib l2" << endl;
 			if (party[i]->room->inRoom[j]->npc == 1 && party[i]->room->inRoom[j]->cur_hp > 0)
 				return true;
 		}
-	}*/
-	return true;
+	}
+	return false;
 }

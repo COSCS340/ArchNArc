@@ -250,6 +250,7 @@ void nightmare(Entity* ePtr){
 		printf("%s resists your magic.\n", ePtr1->name.c_str());
 		ePtr->cooldown = 5;
 	}
+	ePtr->cur_mp -= 5;
 }
 
 void tai(Entity* ePtr){
@@ -264,13 +265,11 @@ void tai(Entity* ePtr){
 			if (ePtr->room->inRoom[i]->cur_hp < 1){
 				strSize = ePtr->room->inRoom[i]->name.size();
 				ePtr->room->inRoom[i]->name += " dead";
-				ePtr1 = ePtr->room->inRoom[i];
-				printf("| %5d %-30s |\n", i+1, ePtr1->name.c_str());
+				printf("| %5d %-30s |\n", i+1, ePtr->room->inRoom[i]->name.c_str());
 				ePtr->room->inRoom[i]->name.resize(strSize);
 			}
 			else {
-				ePtr1 = ePtr->room->inRoom[i];
-				printf("| %5d %-30s |\n", i+1, ePtr1->name.c_str());
+				printf("| %5d %-30s |\n", i+1, ePtr->room->inRoom[i]->name.c_str());
 			}
 		}
 		printf(" --------------------------------------\n");
@@ -301,12 +300,10 @@ void tai(Entity* ePtr){
 			}
 		}
 	}while (target == size);
-	ePtr1 = ePtr->room->inRoom[target];
-	ePtr1->illusion = new Entity();
-	if (ePtr1->illusion == NULL)
-		cout << " huh" << endl;
-	ePtr1->illusion->name = "tai";
-	ePtr1->illusion->illusion = ePtr;
+	ePtr->room->inRoom[target]->makeIll("tai");
+	cout << ePtr->room->inRoom[target]->illusion->name << endl;
+	ePtr->room->inRoom[target]->illusion->illusion = ePtr;
+	ePtr->cur_mp -= 10;
 	ePtr->cooldown = 30;
 }
 

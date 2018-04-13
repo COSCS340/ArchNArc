@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <utility>
 
 using namespace std;
 
@@ -78,9 +79,20 @@ class Job {
 
 class Tile {
 	public:
-	Tile () {for (int i = 0; i < 4; i++) doors[i] = NULL;}
-	Tile* doors[4];
+	Tile () {return;}
+	vector <pair <Tile*, string> > door;
 	vector <class Entity*> inRoom;
+	class Area* destination;
+	class Area* zone;
+	int capacity;
+};
+
+class Area {
+	public:
+	Area() {return;}
+	vector <Tile*> mapOfArea;
+	vector <class Entity*> inDungeon;
+	string name;
 };
 
 class Entity {
@@ -133,6 +145,7 @@ class Entity {
 		int act();
 		Tile* room;
 		void npcAttack();
+		void makeIll(string);
 };
 
 void setUpParty(Entity* party[]);
