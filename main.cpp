@@ -261,7 +261,7 @@ void makeMines (Area& mines) {
 
 bool inBattle (Entity* party[]) {
 	for (int i = 0; i < 7; i++){
-		for (int j = 0; j < party[i]->room->inRoom.size(); j++){
+		for (int j = 0; j < party[i]->room->inRoom.size() && party[i]->room->inRoom[j] != NULL; j++){
 			if (party[i]->room->inRoom[j]->npc == 1 && party[i]->room->inRoom[j]->cur_hp > 0)
 				return true;
 		}
