@@ -27,7 +27,7 @@ static const byte RACEATTS[][6] = {{10,10,10,10,10,10},{3,3,3,3,3,3}};
 static const string JOBS[]={"fightard", "gambler", "prism wizard", "clay warrior", "dancer", "anime kid", "Illusionist", "Cardmaster"}; //note: some names not final
 static const string DUNGEON_OPTIONS[] = {"Attack", "Defend", "Skill", "Item", "Info", "Move", "Quit"};
 static const string DIRECTIONS[] = {"North", "South", "East", "West"};
-static const string SKILL_LIST[][3] = {{"", "", ""},{"Coin Toss", "Multi-Slash", "Dice Bomb"},{"", "", ""},{"", "", ""},{"", "", ""},{"", "", ""},{"Nightmare", "Thou Art I", "Illusory Strength"},{"Draw", "Fireball", "Capture"}} ;
+static const string SKILL_LIST[][3] = {{"", "", ""},{"Coin Toss", "Multi-Slash", "Dice Bomb"},{"", "", ""},{"", "", ""},{"", "", ""},{"", "", ""},{"Nightmare", "Thou Art I", "Dream Reaper"},{"Draw", "Fireball", "Capture"}} ;
 //ALL PRIVATIZATION HAS BEEN REMOVED. GOT FRUSTRATED ARGUING WITH THE COMPILER.
 //IF WE WANT GOOD CODING PRACTICE, IT CAN BE TWEAKED LATER, BUT FOR NOW,
 //EVERYTHING IS HELD IN PUBLIC TRUST. WHOO COMMUNISM.

@@ -314,10 +314,8 @@ void Entity::listAttributes() {
 
 int Entity::tick (int tFactor) {
 	if (illusion != NULL){
-		cout << "working" << endl;
 		int mag, res;
 		if (illusion->name == "tai"){
-			cout << "Working" << endl;
 			int mag = rand()%illusion->illusion->attributes[2];
 			if (attributes[4] != 0)
 				int res = rand()%attributes[4];
