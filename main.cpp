@@ -191,7 +191,6 @@ void handler (Entity* party[]) {
 			else
 				tFactor = 10;
 			for (size_t i = 0; i < mines.inDungeon.size(); i++){
-				cout << mines.inDungeon[i]->name << endl;
 				running = mines.inDungeon[i]->tick(tFactor);
 				if (running == 0)
 					break;
@@ -320,19 +319,19 @@ void makeMines (Area& mines) {
 			mines.inDungeon[i]->room = mines.mapOfArea[6];
 			mines.mapOfArea[6]->inRoom.push_back(mines.inDungeon[i]);
 		}
-		if (i < 15){
+		else if (i < 15){
 			mines.inDungeon[i]->room = mines.mapOfArea[3];
 			mines.mapOfArea[3]->inRoom.push_back(mines.inDungeon[i]);
 		}
-		if (i < 20){
+		else if (i < 20){
 			mines.inDungeon[i]->room = mines.mapOfArea[9];
 			mines.mapOfArea[9]->inRoom.push_back(mines.inDungeon[i]);
 		}
-		if (i < 25){
+		else if (i < 25){
 			mines.inDungeon[i]->room = mines.mapOfArea[12];
 			mines.mapOfArea[12]->inRoom.push_back(mines.inDungeon[i]);
 		}
-		if (i < 30){
+		else if (i < 30){
 			mines.inDungeon[i]->room = mines.mapOfArea[14];
 			mines.mapOfArea[14]->inRoom.push_back(mines.inDungeon[i]);
 		}

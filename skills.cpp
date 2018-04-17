@@ -301,7 +301,6 @@ void tai(Entity* ePtr){
 		}
 	}while (target == size);
 	ePtr->room->inRoom[target]->makeIll("tai");
-	cout << ePtr->room->inRoom[target]->illusion->name << endl;
 	ePtr->room->inRoom[target]->illusion->illusion = ePtr;
 	ePtr->cur_mp -= 10;
 	ePtr->cooldown = 30;

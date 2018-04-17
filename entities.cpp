@@ -488,6 +488,7 @@ void Entity::attack() {
 	ePtr = room->inRoom[target];
 	if (ePtr->cur_hp < 1){
 		ePtr->cooldown += 100;
+		cooldown += 10;
 		return;
 	}
 	int check = rand()%20;
@@ -592,16 +593,7 @@ void Entity::move() {
 				printf("I don't recognize that. Enter the number. Please try again.\n");
 		}
 	}while (target < 0 || target > room->door.size());
-	for (int i = 0; i <= room->door[target].first->inRoom.size(); i++){
-		if (i == room->door[target].first->inRoom.size()){
-			room->door[target].first->inRoom.push_back(this);
-			break;
-		}
-		if (room->door[target].first->inRoom[i] == NULL){
-			room->door[target].first->inRoom[i] = this;
-			break;
-		}
-	}
+	room->door[target].first->inRoom.push_back(this);
 	for (int i = 0; i < room->inRoom.size(); i++){
 		if (room->inRoom[i]->name == name){
 			room->inRoom[i] = NULL;
@@ -609,6 +601,7 @@ void Entity::move() {
 		}
 	}
 	sort(room->inRoom.begin(), room->inRoom.end(), comp);
+	room->inRoom.resize(room->inRoom.size()-1);
 	room = room->door[target].first;
 	sort(room->inRoom.begin(), room->inRoom.end(), comp);
 	cooldown = 10;
@@ -616,19 +609,19 @@ void Entity::move() {
 
 void Entity::npcAttack() {
 	Entity* ePtr;
+	int i, size;
+	int inRoom = 1;
+	size = room->inRoom.size();
+	for (i = 0; i < size; i++){
+		if (room->inRoom[i]->npc)
+			continue;
+		else
+			break;
+	}
+	if (i == size)
+		return;
 	if (npc == 1){
-		for (int i = 0; i <= room->inRoom.size() && room->inRoom[i] != NULL; i++){
-			if (room->inRoom[i]->npc == 0)
-				break;
-			if (i == room->inRoom.size() || room->inRoom[i] == NULL)
-				return;
-		}
 		int target= rand()%room->inRoom.size();
-		ePtr = room->inRoom[target];
-		while (ePtr->npc){
-			target = rand()%room->inRoom.size();
-			ePtr = room->inRoom[target];
-		}
 		ePtr = room->inRoom[target];
 		while (ePtr->name == name || ePtr == NULL){
 			target = rand()%room->inRoom.size();
