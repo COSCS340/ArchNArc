@@ -191,6 +191,7 @@ void handler (Entity* party[]) {
 			else
 				tFactor = 10;
 			for (size_t i = 0; i < mines.inDungeon.size(); i++){
+				cout << mines.inDungeon[i]->name << endl;
 				running = mines.inDungeon[i]->tick(tFactor);
 				if (running == 0)
 					break;
@@ -208,6 +209,7 @@ bool playerInDungeon(Entity* party[]) {
 }
 
 void makeMines (Area& mines) {
+	Entity* ePtr;
 	mines.name = "Mines of Michaela";
 	for (int i = 0; i < 17; i++){
 		mines.mapOfArea.push_back(new Tile);
@@ -257,6 +259,88 @@ void makeMines (Area& mines) {
 	mines.mapOfArea[14]->door.push_back(make_pair(mines.mapOfArea[16], "East by Northeast"));
 	mines.mapOfArea[15]->door.push_back(make_pair(mines.mapOfArea[14], "West"));
 	mines.mapOfArea[16]->door.push_back(make_pair(mines.mapOfArea[14], "West by Southwest"));
+	for (int i = 0; i < 30; i++){
+		ePtr = new Entity;
+		ePtr->name = "Goblin ";
+		for (int j = 0; j < i%5; j++)
+			ePtr->name += "I";
+		ePtr->attributes = (byte*)malloc(6);
+		ePtr->max_mp = ePtr->cur_mp = 0;
+		ePtr->attributes[0] = rand()%5000;
+		ePtr->attributes[1] = 5;
+		ePtr->attributes[2] = 3;
+		ePtr->attributes[3] = 5;
+		ePtr->attributes[4] = 5;
+		ePtr->attributes[5] = 5;
+		ePtr->max_hp = ePtr->cur_hp = ePtr->attributes[5]*2;
+		ePtr->npc = 1;
+		ePtr->cooldown = 0;
+		ePtr->illusion = NULL;
+		ePtr->defense = 0;
+		mines.inDungeon.push_back(ePtr);
+	}
+	ePtr = new Entity;
+	ePtr->name = "Clay Golem";
+	ePtr->attributes = (byte*)malloc(6);
+	ePtr->max_mp = ePtr->cur_mp = 0;
+	ePtr->attributes[0] = rand()%5000;
+	ePtr->attributes[1] = 15;
+	ePtr->attributes[2] = 0;
+	ePtr->attributes[3] = 3;
+	ePtr->attributes[4] = 5;
+	ePtr->attributes[5] = 15;
+	ePtr->max_hp = ePtr->cur_hp = ePtr->attributes[5]*2;
+	ePtr->npc = 1;
+	ePtr->cooldown = 0;
+	ePtr->illusion = NULL;
+	ePtr->defense = 0;
+	mines.inDungeon.push_back(ePtr);
+	ePtr = new Entity;
+	ePtr->name = "Alaskan Bull Worm";
+	ePtr->attributes = (byte*)malloc(6);
+	ePtr->max_mp = ePtr->cur_mp = 0;
+	ePtr->attributes[0] = rand()%5000;
+	ePtr->attributes[1] = 20;
+	ePtr->attributes[2] = 0;
+	ePtr->attributes[3] = 11;
+	ePtr->attributes[4] = 0;
+	ePtr->attributes[5] = 15;
+	ePtr->max_hp = ePtr->cur_hp = ePtr->attributes[5]*2;
+	ePtr->npc = 1;
+	ePtr->cooldown = 0;
+	ePtr->illusion = NULL;
+	ePtr->defense = 0;
+	mines.inDungeon.push_back(ePtr);
+	for (int i = 0; i < 30; i++){
+		if (i < 5){
+			mines.inDungeon[i]->room = mines.mapOfArea[2];
+			mines.mapOfArea[2]->inRoom.push_back(mines.inDungeon[i]);
+		}
+		else if (i < 10){
+			mines.inDungeon[i]->room = mines.mapOfArea[6];
+			mines.mapOfArea[6]->inRoom.push_back(mines.inDungeon[i]);
+		}
+		if (i < 15){
+			mines.inDungeon[i]->room = mines.mapOfArea[3];
+			mines.mapOfArea[3]->inRoom.push_back(mines.inDungeon[i]);
+		}
+		if (i < 20){
+			mines.inDungeon[i]->room = mines.mapOfArea[9];
+			mines.mapOfArea[9]->inRoom.push_back(mines.inDungeon[i]);
+		}
+		if (i < 25){
+			mines.inDungeon[i]->room = mines.mapOfArea[12];
+			mines.mapOfArea[12]->inRoom.push_back(mines.inDungeon[i]);
+		}
+		if (i < 30){
+			mines.inDungeon[i]->room = mines.mapOfArea[14];
+			mines.mapOfArea[14]->inRoom.push_back(mines.inDungeon[i]);
+		}
+	}
+	mines.inDungeon[30]->room = mines.mapOfArea[14];
+	mines.mapOfArea[14]->inRoom.push_back(mines.inDungeon[30]);
+	mines.inDungeon[31]->room = mines.mapOfArea[16];
+	mines.mapOfArea[16]->inRoom.push_back(mines.inDungeon[31]);
 }
 
 bool inBattle (Entity* party[]) {

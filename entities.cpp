@@ -462,7 +462,10 @@ void Entity::attack() {
 			target = atoi(temp.c_str()) - 1;
 			if(target >= 0 && target < size) { 
 				break;
-			} 
+			}
+			temp[0] = tolower(temp[0]);
+			if (temp[0] == 'b' || temp[0] == 'c' || temp[0] == 'g')
+				return;
 			else {
 				for(int i = 0; temp[i] != '\0'; i++) {
 					temp[i] = tolower(temp[i]);
@@ -534,6 +537,9 @@ void Entity::skill() {
 			if(target >= 0 && target < SKILLS[jobNum]) { 
 				break;
 			} 
+			temp[0] = tolower(temp[0]);
+			if (temp[0] == 'b' || temp[0] == 'c' || temp[0] == 'g')
+				return;
 			else {
 				for(int i = 0; temp[i] != '\0'; i++) {
 					temp[i] = tolower(temp[i]);
@@ -579,8 +585,11 @@ void Entity::move() {
 			if(target >= 0 && target < room->door.size()) { 
 				break;
 			} 
+			temp[0] = tolower(temp[0]);
+			if (temp[0] == 'b' || temp[0] == 'c' || temp[0] == 'g')
+				return;
 			else //bad input
-				printf("I don't recognize that. Please try again.\n");
+				printf("I don't recognize that. Enter the number. Please try again.\n");
 		}
 	}while (target < 0 || target > room->door.size());
 	for (int i = 0; i <= room->door[target].first->inRoom.size(); i++){
@@ -608,7 +617,18 @@ void Entity::move() {
 void Entity::npcAttack() {
 	Entity* ePtr;
 	if (npc == 1){
-		int target = rand()%room->inRoom.size();
+		for (int i = 0; i <= room->inRoom.size() && room->inRoom[i] != NULL; i++){
+			if (room->inRoom[i]->npc == 0)
+				break;
+			if (i == room->inRoom.size() || room->inRoom[i] == NULL)
+				return;
+		}
+		int target= rand()%room->inRoom.size();
+		ePtr = room->inRoom[target];
+		while (ePtr->npc){
+			target = rand()%room->inRoom.size();
+			ePtr = room->inRoom[target];
+		}
 		ePtr = room->inRoom[target];
 		while (ePtr->name == name || ePtr == NULL){
 			target = rand()%room->inRoom.size();
@@ -950,7 +970,7 @@ bool comp (Entity* ePtr1, Entity* ePtr2){
 	else if (ePtr2 == NULL)
 		return true;
 	else
-		return ePtr1->attributes[2] < ePtr2->attributes[2];
+		return ePtr1->attributes[2] > ePtr2->attributes[2];
 }
 
 void Entity::makeIll (string name) {

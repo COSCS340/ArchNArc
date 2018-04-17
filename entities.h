@@ -140,6 +140,7 @@ class Entity {
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
+		int status;
 		Entity* illusion;
 		int defense;
 		int act();
