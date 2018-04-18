@@ -147,6 +147,7 @@ class Entity {
 		Tile* room;
 		void npcAttack();
 		void makeIll(string);
+		vector <pair <int, int> > se;
 };
 
 void setUpParty(Entity* party[]);

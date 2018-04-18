@@ -220,7 +220,7 @@ void Entity::setUpChar(string n, byte r, byte c) {
 		equipment["Weapon"].defence = 0;
 		skills.push_back(nightmare);
 		skills.push_back(tai);
-		skills.push_back(illStrength);
+		skills.push_back(dreamReaper);
 	}
 	else { //light armor
 		equipment["Weapon"].name = "Small Pamphlet";
@@ -313,6 +313,19 @@ void Entity::listAttributes() {
 }
 
 int Entity::tick (int tFactor) {
+	if (se.size() > 0){
+		for (int i = 0; i < se.size(); i++){
+			if (se[i].first == 0){
+				se[i].second -= tFactor;
+				if (se[i].second < 1){
+					se.resize(0);
+					printf("%s wakes up.\n", name.c_str());
+				}
+				else 
+					return 1;
+			}
+		}
+	}
 	if (illusion != NULL){
 		int mag, res;
 		if (illusion->name == "tai"){

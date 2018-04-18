@@ -5,12 +5,17 @@
 #include <cstdlib>
 #include <cctype>
 #include <string>
+#include <utility>
 //#include "anaParser.h"
 #include "entities.h"
 #include "fields.h"
 #include "skills.h"
 
 void coinFlip(Entity* ePtr){
+	if (ePtr->cur_mp < 5){
+		printf("%s doesn't have the energy to cast this.\n", ePtr->name.c_str());
+		return;
+	}
 	int payment;
 	do {
 		printf("How much gold do you pay to Weddench?\n >> ");
@@ -18,8 +23,9 @@ void coinFlip(Entity* ePtr){
 		if (payment < 0 || payment > ePtr->cash)
 			printf("Invalid input");
 	} while (payment > ePtr->cash || payment < 0);
+	if (payment == 0)
+		payment = 1;
 	ePtr->cash -= payment;
-	payment++;
 	if (rand()%2 == 1){
 		printf("Heads. You deal %d damage to all Enemies in this room\n", payment*5);
 		for (int i = 0; i < ePtr->room->inRoom.size() && ePtr->room->inRoom[i] != NULL; i++)
@@ -31,9 +37,14 @@ void coinFlip(Entity* ePtr){
 			ePtr->cur_hp -= payment*5;
 	}
 	ePtr->cooldown = 20;
+	ePtr->cur_mp -= 5;
 }
 
 void multislash(Entity* ePtr) {
+	if (ePtr->cur_mp < 3){
+		printf("%s doesn't have the energy to cast this.\n", ePtr->name.c_str());
+		return;
+	}
 	Entity* ePtr1;
 	int target, size, flag, strSize;
 	string temp;
@@ -108,8 +119,14 @@ void multislash(Entity* ePtr) {
 		else 
 			odds = payment;
 		payment -= odds;
-		if (ePtr1->cur_hp < 1)
+		if (ePtr1->cur_hp < 1){
 			ePtr1->cooldown += 100;
+			if (rand()%100 < 29+odds)
+				strikes++;
+			strikes--;
+			tStrikes++;
+			continue;
+		}
 		int check = rand()%20;
 		if (ePtr->attributes[3]+check < ePtr1->attributes[3]+(rand()%20))
 			printf("%s misses.\n", ePtr->name.c_str());
@@ -130,9 +147,14 @@ void multislash(Entity* ePtr) {
 		tStrikes++;
 	}
 	ePtr->cooldown = 5*tStrikes;
+	ePtr->cur_mp -= 3;
 }
 
 void diceBomb(Entity* ePtr) {
+	if (ePtr->cur_mp < 10){
+		printf("%s doesn't have the energy to cast this.\n", ePtr->name.c_str());
+		return;
+	}
 	int payment, roll, check;
 	Entity* ePtr1;
 	do {
@@ -141,6 +163,8 @@ void diceBomb(Entity* ePtr) {
 		if (payment < 0 || payment > ePtr->cash)
 			printf("Invalid input");
 	} while (payment > ePtr->cash || payment < 0);
+	if (payment == 0)
+		payment = 1;
 	ePtr->cash -= payment;
 	roll = rand()%20;
 	if (roll == 0){
@@ -183,77 +207,39 @@ void diceBomb(Entity* ePtr) {
 		}
 	}
 	ePtr->cooldown = 20;
+	ePtr->cur_mp -= 10;
 }
 
 void nightmare(Entity* ePtr){
-	Entity* ePtr1;
-	int target, size, flag, strSize;
-	string temp;
-	size = ePtr->room->inRoom.size();
-	do {
-		printf("Who does %s create an illusion for?\n", ePtr->name.c_str());
-		printf(" --------------------------------------\n");
-		for(int i = 0; i < size && ePtr->room->inRoom[i] != NULL; i++) {
-			if (ePtr->room->inRoom[i]->cur_hp < 1){
-				strSize = ePtr->room->inRoom[i]->name.size();
-				ePtr->room->inRoom[i]->name += " dead";
-				ePtr1 = ePtr->room->inRoom[i];
-				printf("| %5d %-30s |\n", i+1, ePtr1->name.c_str());
-				ePtr->room->inRoom[i]->name.resize(strSize);
-			}
-			else {
-				ePtr1 = ePtr->room->inRoom[i];
-				printf("| %5d %-30s |\n", i+1, ePtr1->name.c_str());
-			}
-		}
-		printf(" --------------------------------------\n");
-		while(true) {
-			flag = 1;
-			printf(" >> ");
-			getline(cin, temp);
-			target = atoi(temp.c_str()) - 1;
-			if(target >= 0 && target < size) { 
-				break;
-			} 
-			else {
-				for(int i = 0; temp[i] != '\0'; i++) {
-					temp[i] = tolower(temp[i]);
-				}
-				for (target = 0; target < size; target++) {
-					if (temp == ePtr->room->inRoom[target]->name) {
-						flag = 0;
-						break;
-					}
-				}
-				if(flag == 0) {
-					break;
-				}
-				if (target == size){ //bad input
-					printf("I don't recognize that. Please try again.\n");
-				}
-			}
-		}
-	}while (target == size);
-	ePtr1 = ePtr->room->inRoom[target];
-	int res, mag;
-	mag = rand()%ePtr->attributes[2];
-	if (ePtr1->attributes[4] == 0)
-		res = 0;
-	else
-		res = ePtr1->attributes[4];
-	if (mag > res){
-		printf("%s cowers at the sight of their worst fear.\n", ePtr1->name.c_str());
-		ePtr1->cooldown += 30;
-		ePtr->cooldown = 5;
+	if (ePtr->cur_mp < 5){
+		printf("%s doesn't have the energy to cast this.\n", ePtr->name.c_str());
+		return;
 	}
-	else {
-		printf("%s resists your magic.\n", ePtr1->name.c_str());
-		ePtr->cooldown = 5;
+	int size = ePtr->room->inRoom.size();
+	for (int i = 0; i < size; i++){
+		int res, mag;
+		mag = rand()%ePtr->attributes[2];
+		if (ePtr->room->inRoom[i]->attributes[4] == 0)
+			res = 0;
+		else
+			res = rand()%ePtr->room->inRoom[i]->attributes[4];
+		if (mag > res){
+			printf("%s falls to sleep and confronts their worst fears.\n", ePtr->room->inRoom[i]->name.c_str());
+			ePtr->room->inRoom[i]->se.push_back(make_pair(0, 30));
+		}
+		else {
+			printf("%s resists your magic.\n", ePtr->room->inRoom[i]->name.c_str());
+		}
 	}
+	ePtr->cooldown = 5;
 	ePtr->cur_mp -= 5;
 }
 
 void tai(Entity* ePtr){
+	if (ePtr->cur_mp < 10){
+		printf("%s doesn't have the energy to cast this.\n", ePtr->name.c_str());
+		return;
+	}
 	Entity* ePtr1;
 	int target, size, flag, strSize;
 	string temp;
@@ -306,6 +292,39 @@ void tai(Entity* ePtr){
 	ePtr->cooldown = 30;
 }
 
-void illStrength (Entity* ePtr){
-	return;
+void dreamReaper (Entity* ePtr){
+	if (ePtr->cur_mp < 5){
+		printf("%s doesn't have the energy to cast this.\n", ePtr->name.c_str());
+		return;
+	}
+	int size = ePtr->room->inRoom.size();
+	for (int i = 0; i < size; i++){
+		if (sleeping(ePtr->room->inRoom[i])){
+			int res, mag;
+			mag = rand()%ePtr->attributes[2];
+			if (ePtr->room->inRoom[i]->attributes[4] == 0)
+				res = 0;
+			else
+				res = rand()%ePtr->room->inRoom[i]->attributes[4];
+			if (mag > res){
+				printf("%s couldn't escape the reaper.\n", ePtr->room->inRoom[i]->name.c_str());
+				ePtr->room->inRoom[i]->cur_hp = 0;
+				ePtr->room->inRoom[i]->cooldown = 100;
+				delete ePtr->room->inRoom[i]->illusion;
+				ePtr->room->inRoom[i]->illusion = NULL;
+			}
+			else {
+				printf("%s resists your magic.\n", ePtr->room->inRoom[i]->name.c_str());
+			}
+		}
+	}
+	ePtr->cooldown = 5;
+	ePtr->cur_mp -= 5;
+}
+
+bool sleeping (Entity* ePtr){
+	for (int j = 0; j < ePtr->se.size(); j++)
+		if (ePtr->se[j].first == 0)
+			return true;
+	return false;
 }
