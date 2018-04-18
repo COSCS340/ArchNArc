@@ -1,0 +1,37 @@
+Deryn the Righteous
+Human
+500
+1
+0
+0
+20
+20
+10
+10
+10
+10
+10
+10
+10
+10
+fightard
+0
+2
+Torso
+Leather Tunic
+shirt
+0
+2
+0
+Weapon
+Dagger
+edged weapon
+3
+0
+0
+1
+potion
+Small potion
+healing
+3
+4

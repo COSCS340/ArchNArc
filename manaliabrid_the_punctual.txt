@@ -1,0 +1,37 @@
+Manaliabrid the Punctual
+Human
+500
+1
+0
+0
+20
+20
+10
+10
+10
+10
+10
+10
+10
+10
+gambler
+0
+2
+Torso
+Airy Robe
+shirt
+0
+1
+0
+Weapon
+Small Pamphlet
+magic paper
+4
+0
+0
+1
+potion
+Small potion
+healing
+3
+4

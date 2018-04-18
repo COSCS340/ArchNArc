@@ -48,6 +48,20 @@ int main(int argc,char** args) {
 
 	setUpParty(party);
 	
+	input.open("caveTemplate.txt");
+	if(input.fail()) {
+		printf("Failed to find the cave entrance.\n");
+	} else {
+		getline(input, temp);
+		while(!(input.eof())) {
+			printf("%s\n", temp.c_str());
+			getline(input, temp);
+		}
+		input.close();
+	}
+
+	getline(cin, junk);
+
 	handler(party);
 
 	jettison_inputstruct(in);
@@ -154,18 +168,7 @@ int main(int argc,char** args) {
 		if (place > 6)
 			break;
 	}
-	//jettison_inputstruct(in);
-	input.open("caveTemplate.txt");
-	if(input.fail()) {
-		printf("Huh, there isn't a file for the cave template.\n");
-	} else {
-		getline(input, temp);
-		while(!(input.eof())) {
-			printf("%s\n", temp.c_str());
-			getline(input, temp);
-		}
-	}
-	
+
 	handler(party);
 }
 
