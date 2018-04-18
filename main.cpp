@@ -25,6 +25,7 @@ int spid; // PID of the server, only set to non-zero if this is the client that 
 
 int main(int argc,char** args) {
 	//IS in = new_inputstruct(NULL);
+	
 	int i;
 	IS in = new_inputstruct(NULL);
 	printf("Welcome to Archery & Arcana, player.\n");
@@ -154,6 +155,17 @@ int main(int argc,char** args) {
 			break;
 	}
 	//jettison_inputstruct(in);
+	input.open("caveTemplate.txt");
+	if(input.fail()) {
+		printf("Huh, there isn't a file for the cave template.\n");
+	} else {
+		getline(input, temp);
+		while(!(input.eof())) {
+			printf("%s\n", temp.c_str());
+			getline(input, temp);
+		}
+	}
+	
 	handler(party);
 }
 
