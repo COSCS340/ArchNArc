@@ -220,7 +220,7 @@ void Entity::setUpChar(string n, byte r, byte c) {
 		equipment["Weapon"].defence = 0;
 		skills.push_back(nightmare);
 		skills.push_back(tai);
-		skills.push_back(illStrength);
+		skills.push_back(dreamReaper);
 	}
 	else { //light armor
 		equipment["Weapon"].name = "Small Pamphlet";
@@ -313,6 +313,19 @@ void Entity::listAttributes() {
 }
 
 int Entity::tick (int tFactor) {
+	if (se.size() > 0){
+		for (int i = 0; i < se.size(); i++){
+			if (se[i].first == 0){
+				se[i].second -= tFactor;
+				if (se[i].second < 1){
+					se.resize(0);
+					printf("%s wakes up.\n", name.c_str());
+				}
+				else 
+					return 1;
+			}
+		}
+	}
 	if (illusion != NULL){
 		int mag, res;
 		if (illusion->name == "tai"){
@@ -462,7 +475,10 @@ void Entity::attack() {
 			target = atoi(temp.c_str()) - 1;
 			if(target >= 0 && target < size) { 
 				break;
-			} 
+			}
+			temp[0] = tolower(temp[0]);
+			if (temp[0] == 'b' || temp[0] == 'c' || temp[0] == 'g')
+				return;
 			else {
 				for(int i = 0; temp[i] != '\0'; i++) {
 					temp[i] = tolower(temp[i]);
@@ -485,6 +501,7 @@ void Entity::attack() {
 	ePtr = room->inRoom[target];
 	if (ePtr->cur_hp < 1){
 		ePtr->cooldown += 100;
+		cooldown += 10;
 		return;
 	}
 	int check = rand()%20;
@@ -534,6 +551,9 @@ void Entity::skill() {
 			if(target >= 0 && target < SKILLS[jobNum]) { 
 				break;
 			} 
+			temp[0] = tolower(temp[0]);
+			if (temp[0] == 'b' || temp[0] == 'c' || temp[0] == 'g')
+				return;
 			else {
 				for(int i = 0; temp[i] != '\0'; i++) {
 					temp[i] = tolower(temp[i]);
@@ -579,20 +599,14 @@ void Entity::move() {
 			if(target >= 0 && target < room->door.size()) { 
 				break;
 			} 
+			temp[0] = tolower(temp[0]);
+			if (temp[0] == 'b' || temp[0] == 'c' || temp[0] == 'g')
+				return;
 			else //bad input
-				printf("I don't recognize that. Please try again.\n");
+				printf("I don't recognize that. Enter the number. Please try again.\n");
 		}
 	}while (target < 0 || target > room->door.size());
-	for (int i = 0; i <= room->door[target].first->inRoom.size(); i++){
-		if (i == room->door[target].first->inRoom.size()){
-			room->door[target].first->inRoom.push_back(this);
-			break;
-		}
-		if (room->door[target].first->inRoom[i] == NULL){
-			room->door[target].first->inRoom[i] = this;
-			break;
-		}
-	}
+	room->door[target].first->inRoom.push_back(this);
 	for (int i = 0; i < room->inRoom.size(); i++){
 		if (room->inRoom[i]->name == name){
 			room->inRoom[i] = NULL;
@@ -600,6 +614,7 @@ void Entity::move() {
 		}
 	}
 	sort(room->inRoom.begin(), room->inRoom.end(), comp);
+	room->inRoom.resize(room->inRoom.size()-1);
 	room = room->door[target].first;
 	sort(room->inRoom.begin(), room->inRoom.end(), comp);
 	cooldown = 10;
@@ -607,10 +622,21 @@ void Entity::move() {
 
 void Entity::npcAttack() {
 	Entity* ePtr;
+	int i, size;
+	int inRoom = 1;
+	size = room->inRoom.size();
+	for (i = 0; i < size; i++){
+		if (room->inRoom[i]->npc)
+			continue;
+		else
+			break;
+	}
+	if (i == size)
+		return;
 	if (npc == 1){
-		int target = rand()%room->inRoom.size();
+		int target= rand()%room->inRoom.size();
 		ePtr = room->inRoom[target];
-		while (ePtr->name == name || ePtr == NULL){
+		while (ePtr->npc){
 			target = rand()%room->inRoom.size();
 			ePtr = room->inRoom[target];
 		}
@@ -950,7 +976,7 @@ bool comp (Entity* ePtr1, Entity* ePtr2){
 	else if (ePtr2 == NULL)
 		return true;
 	else
-		return ePtr1->attributes[2] < ePtr2->attributes[2];
+		return ePtr1->attributes[2] > ePtr2->attributes[2];
 }
 
 void Entity::makeIll (string name) {

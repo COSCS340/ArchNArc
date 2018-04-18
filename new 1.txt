@@ -1,0 +1,14 @@
+Have:
+map system
+encounters
+skills
+party
+combat
+exploration
+
+Need:
+Treasure
+Level up
+find yourself
+actual map
+balance

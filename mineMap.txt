@@ -45,3 +45,12 @@ LEGEND:
 4 - EVENT/TEXT
 5 - TREASURE
 6 - MONSTER ENCOUNTER
+
+Path to Boss Room:
+West
+South
+Southwest
+Northwest
+North by Northwest
+North
+East by Northeast

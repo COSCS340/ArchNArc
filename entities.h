@@ -140,12 +140,14 @@ class Entity {
 		int cur_hp;
 		int max_mp;
 		int cur_mp;
+		int status;
 		Entity* illusion;
 		int defense;
 		int act();
 		Tile* room;
 		void npcAttack();
 		void makeIll(string);
+		vector <pair <int, int> > se;
 };
 
 void setUpParty(Entity* party[]);
