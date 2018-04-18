@@ -636,7 +636,7 @@ void Entity::npcAttack() {
 	if (npc == 1){
 		int target= rand()%room->inRoom.size();
 		ePtr = room->inRoom[target];
-		while (ePtr->name == name || ePtr == NULL){
+		while (ePtr->npc){
 			target = rand()%room->inRoom.size();
 			ePtr = room->inRoom[target];
 		}
